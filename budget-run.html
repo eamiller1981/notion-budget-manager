@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Budget Run + Allocation Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --pink-light: #f7dde2;
+      --pink-mid: #e8a6b8;
+      --cream: #fff9f9;
+      --text-main: #3a3a3a;
+      --border-soft: #e7d4d8;
+      --accent-green: #3b7f5c;
+      --accent-amber: #b8860b;
+      --accent-rose: #c6536b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: var(--cream);
+      color: var(--text-main);
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 16px 32px;
+    }
+
+    .sticky-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 8px 16px;
+      z-index: 10;
+    }
+
+    .sticky-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .sticky-label {
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-header {
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: #6b5a63;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 24px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .field input[type="number"],
+    .field input[type="date"],
+    .field select {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      font-size: 14px;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .field input[type="number"]:focus,
+    .field input[type="date"]:focus,
+    .field select:focus {
+      border-color: var(--pink-mid);
+    }
+
+    .pill-card {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--pink-light);
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pill-label {
+      font-weight: 500;
+    }
+
+    .pill-value {
+      font-weight: 600;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 1.5fr 0.7fr 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .slider-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .slider-row input[type="range"] {
+      width: 100%;
+      accent-color: var(--pink-mid);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+    }
+
+    .status-pill--balanced {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .status-pill--under {
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .status-pill--over {
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+    }
+
+    .json-preview {
+      margin-top: 24px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      max-height: 260px;
+      overflow: auto;
+    }
+
+    .balance-highlight {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .balance-highlight--ok {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .balance-highlight--under {
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .balance-highlight--over {
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+    }
+  </style>
+</head>
+<body>
+  <div class="sticky-bar">
+    <div class="sticky-inner">
+      <div><span class="sticky-label">Paydate:</span> <span id="sticky-paydate">—</span></div>
+      <div><span class="sticky-label">Total Balance:</span> <span id="sticky-total">—</span></div>
+      <div><span class="sticky-label">Remainder:</span> <span id="sticky-remainder">—</span></div>
+    </div>
+  </div>
+
+  <div class="page">
+    <h1>Budget Run & Allocation Engine</h1>
+
+    <!-- SECTION 1: ACCOUNT BALANCES -->
+    <section class="section" id="section-accounts">
+      <div class="section-header">
+        <h2 class="section-title">Account Balances</h2>
+        <p class="section-subtitle">
+          Begin the ritual by gathering today’s coin and counting what rests in each vault.
+        </p>
+      </div>
+
+      <div class="grid">
+        <!-- Paydate -->
+        <div class="field">
+          <label for="Paydate">Paydate</label>
+          <input type="date" id="Paydate" />
+        </div>
+
+        <!-- Today -->
+        <div class="field">
+          <label for="Today">Today</label>
+          <input type="date" id="Today" />
+        </div>
+
+        <!-- Total Account Balance pill -->
+        <div class="field" style="grid-column: 1 / -1;">
+          <div class="pill-card">
+            <span class="pill-label">Total Account Balance</span>
+            <span class="pill-value" id="TotalAccountBalanceDisplay">$0.00</span>
+          </div>
+        </div>
+
+        <!-- Accounts -->
+        <div class="field">
+          <label for="7419 Main">7419 Main</label>
+          <input type="number" id="7419 Main" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="7397 Savings">7397 Savings</label>
+          <input type="number" id="7397 Savings" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="9176 Liz COH">9176 Liz COH</label>
+          <input type="number" id="9176 Liz COH" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="9168 Liz COH Svgs">9168 Liz COH Svgs</label>
+          <input type="number" id="9168 Liz COH Svgs" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="0458 Matt COH">0458 Matt COH</label>
+          <input type="number" id="0458 Matt COH" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="0466 Matt COH Svgs">0466 Matt COH Svgs</label>
+          <input type="number" id="0466 Matt COH Svgs" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="0741 Special Svgs">0741 Special Svgs</label>
+          <input type="number" id="0741 Special Svgs" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="7889 Logan COH">7889 Logan COH</label>
+          <input type="number" id="7889 Logan COH" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="3195 Logan COH Svgs">3195 Logan COH Svgs</label>
+          <input type="number" id="3195 Logan COH Svgs" step="0.01" />
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: ALLOCATION ENGINE -->
+    <section class="section" id="section-allocation">
+      <div class="section-header">
+        <h2 class="section-title">Allocation Engine</h2>
+        <p class="section-subtitle">
+          With your coffers tallied, channel the remainder into the realms where future prosperity grows.
+        </p>
+      </div>
+
+      <div class="grid">
+        <!-- Balance Status (select, but we also compute a suggestion) -->
+        <div class="field">
+          <label for="Balance Status">Balance Status</label>
+          <select id="Balance Status">
+            <option value="">—</option>
+            <option value="Balanced">Balanced</option>
+            <option value="Under">Under</option>
+            <option value="Over">Over</option>
+          </select>
+        </div>
+
+        <!-- Less Bills -->
+        <div class="field">
+          <label for="Less Bills">Less Bills</label>
+          <input type="number" id="Less Bills" step="0.01" />
+        </div>
+
+        <!-- Less Debt -->
+        <div class="field">
+          <label for="Less Debt">Less Debt</label>
+          <input type="number" id="Less Debt" step="0.01" />
+        </div>
+
+        <!-- Total Due -->
+        <div class="field">
+          <label>Total Due</label>
+          <div class="pill-card">
+            <span class="pill-label">Total Due</span>
+            <span class="pill-value" id="TotalDueDisplay">$0.00</span>
+          </div>
+        </div>
+
+        <!-- Remainder -->
+        <div class="field" style="grid-column: 1 / -1;">
+          <div class="pill-card">
+            <span class="pill-label">Remainder</span>
+            <span class="pill-value" id="RemainderDisplay">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fixed Allocations -->
+      <div class="section-header" style="margin-top: 16px;">
+        <h3 class="section-title" style="font-size: 16px;">Fixed Allocations</h3>
+        <p class="section-subtitle">
+          Distribute coin to the household keepers — each receives their due.
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="Liz COH ($)">Liz COH ($)</label>
+          <input type="number" id="Liz COH ($)" step="0.01" value="300" />
+        </div>
+
+        <div class="field">
+          <label for="Liz COH Svgs ($)">Liz COH Svgs ($)</label>
+          <input type="number" id="Liz COH Svgs ($)" step="0.01" value="300" />
+        </div>
+
+        <div class="field">
+          <label for="Matt COH ($)">Matt COH ($)</label>
+          <input type="number" id="Matt COH ($)" step="0.01" value="175" />
+        </div>
+
+        <div class="field">
+          <label for="Matt COH Svgs ($)">Matt COH Svgs ($)</label>
+          <input type="number" id="Matt COH Svgs ($)" step="0.01" value="175" />
+        </div>
+
+        <div class="field">
+          <label for="Logan COH ($)">Logan COH ($)</label>
+          <input type="number" id="Logan COH ($)" step="0.01" value="225" />
+        </div>
+
+        <div class="field">
+          <label for="Logan COH Svgs ($)">Logan COH Svgs ($)</label>
+          <input type="number" id="Logan COH Svgs ($)" step="0.01" value="225" />
+        </div>
+
+        <div class="field">
+          <label for="Logan Allowance ($)">Logan Allowance ($)</label>
+          <input type="number" id="Logan Allowance ($)" step="0.01" value="300" />
+        </div>
+
+        <div class="field">
+          <label for="Housecleaning ($)">Housecleaning ($)</label>
+          <input type="number" id="Housecleaning ($)" step="0.01" value="250" />
+        </div>
+
+        <div class="field" style="grid-column: 1 / -1;">
+          <div class="pill-card">
+            <span class="pill-label">Fixed Allocations</span>
+            <span class="pill-value" id="FixedAllocationsDisplay">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post Fixed Allocations -->
+      <div class="grid" style="margin-top: 16px;">
+        <div class="field">
+          <label>Post Fixed Allocations</label>
+          <div class="pill-card">
+            <span class="pill-label">Post Fixed Allocations</span>
+            <span class="pill-value" id="PostFixedAllocationsDisplay">$0.00</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="Post Fixed Allocation Status">Post Fixed Allocation Status</label>
+          <select id="Post Fixed Allocation Status">
+            <option value="">—</option>
+            <option value="Over">Over</option>
+            <option value="Exact">Exact</option>
+            <option value="Clear">Clear</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Allocation Sliders -->
+      <div class="section-header" style="margin-top: 20px;">
+        <h3 class="section-title" style="font-size: 16px;">Remainder Allocation</h3>
+        <p class="section-subtitle">
+          Now guide the remaining magic — forward, to savings, to special reserves, and to the vault of future wealth.
+        </p>
+      </div>
+
+      <div class="grid">
+        <!-- Balance Forward -->
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>% Add to Bal Fwd</label>
+          <div class="slider-row">
+            <input type="range" id="% Add to Bal Fwd_slider" min="0" max="100" value="0" />
+            <input type="number" id="% Add to Bal Fwd" step="1" min="0" max="100" placeholder="%" />
+            <input type="number" id="$ Add to Bal Fwd" step="0.01" placeholder="$" />
+          </div>
+        </div>
+
+        <!-- Savings -->
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>% Add to Svgs</label>
+          <div class="slider-row">
+            <input type="range" id="% Add to Svgs_slider" min="0" max="100" value="0" />
+            <input type="number" id="% Add to Svgs" step="1" min="0" max="100" placeholder="%" />
+            <input type="number" id="Savings ($)" step="0.01" placeholder="$" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="# Add to Svgs"># Add to Svgs (override)</label>
+          <input type="number" id="# Add to Svgs" step="0.01" />
+        </div>
+
+        <!-- Special Savings -->
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>% Add to Special Svgs</label>
+          <div class="slider-row">
+            <input type="range" id="% Add to Special Svgs_slider" min="0" max="100" value="0" />
+            <input type="number" id="% Add to Special Svgs" step="1" min="0" max="100" placeholder="%" />
+            <input type="number" id="Special Savings ($)" step="0.01" placeholder="$" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="# Add to Special Svgs"># Add to Special Svgs (override)</label>
+          <input type="number" id="# Add to Special Svgs" step="0.01" />
+        </div>
+
+        <!-- Investments -->
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>% Add to Investments</label>
+          <div class="slider-row">
+            <input type="range" id="% Add to Investments_slider" min="0" max="100" value="0" />
+            <input type="number" id="% Add to Investments" step="1" min="0" max="100" placeholder="%" />
+            <input type="number" id="$ Add to Investments" step="0.01" placeholder="$" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Calculations -->
+      <div class="section-header" style="margin-top: 20px;">
+        <h3 class="section-title" style="font-size: 16px;">Summary</h3>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="7397 Savings">7397 Savings (Add to Svgs)</label>
+          <input type="number" id="7397 Savings_alloc" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label for="0741 Special Svgs">0741 Special Svgs (Add to Special Svgs)</label>
+          <input type="number" id="0741 Special Svgs_alloc" step="0.01" />
+        </div>
+
+        <div class="field">
+          <label>Total Allocations</label>
+          <div class="pill-card">
+            <span class="pill-label">Total Allocations</span>
+            <span class="pill-value" id="TotalAllocationsDisplay">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="BalanceSummary" class="balance-highlight">
+        <span>Balance</span>
+        <span id="BalanceDisplay">$0.00</span>
+      </div>
+
+      <!-- JSON Preview -->
+      <div class="json-preview" id="JsonPreview"></div>
+    </section>
+  </div>
+
+  <script>
+    // Utility helpers
+    function num(id) {
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const v = parseFloat(el.value);
+      return isNaN(v) ? 0 : v;
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = value;
+    }
+
+    function formatCurrency(n) {
+      return "$" + n.toFixed(2);
+    }
+
+    function getDateValue(id) {
+      const el = document.getElementById(id);
+      return el && el.value ? el.value : null;
+    }
+
+    // Sync slider + % + $ for a given group
+    function bindSliderPercentDollar(sliderId, percentId, dollarId, getBase) {
+      const slider = document.getElementById(sliderId);
+      const percent = document.getElementById(percentId);
+      const dollar = document.getElementById(dollarId);
+
+      function updateFromPercent() {
+        const base = getBase();
+        const p = parseFloat(percent.value);
+        if (!isNaN(p)) {
+          slider.value = p;
+          const amt = (base * p) / 100;
+          if (!isNaN(amt)) dollar.value = amt.toFixed(2);
+        }
+      }
+
+      function updateFromSlider() {
+        const base = getBase();
+        const p = parseFloat(slider.value);
+        percent.value = p;
+        const amt = (base * p) / 100;
+        if (!isNaN(amt)) dollar.value = amt.toFixed(2);
+      }
+
+      function updateFromDollar() {
+        const base = getBase();
+        const d = parseFloat(dollar.value);
+        if (!isNaN(d) && base > 0) {
+          const p = (d / base) * 100;
+          percent.value = p.toFixed(0);
+          slider.value = p;
+        }
+      }
+
+      if (slider) slider.addEventListener("input", () => { updateFromSlider(); recalc(); });
+      if (percent) percent.addEventListener("input", () => { updateFromPercent(); recalc(); });
+      if (dollar) dollar.addEventListener("input", () => { updateFromDollar(); recalc(); });
+    }
+
+    function recalc() {
+      // 1) Total Account Balance
+      const accounts = [
+        "7419 Main",
+        "7397 Savings",
+        "9176 Liz COH",
+        "9168 Liz COH Svgs",
+        "0458 Matt COH",
+        "0466 Matt COH Svgs",
+        "0741 Special Svgs",
+        "7889 Logan COH",
+        "3195 Logan COH Svgs"
+      ];
+      let totalAccountBalance = 0;
+      accounts.forEach(id => {
+        totalAccountBalance += num(id);
+      });
+      setText("TotalAccountBalanceDisplay", formatCurrency(totalAccountBalance));
+      setText("sticky-total", formatCurrency(totalAccountBalance));
+
+      // 2) Total Due
+      const lessBills = num("Less Bills");
+      const lessDebt = num("Less Debt");
+      const totalDue = lessBills + lessDebt;
+      setText("TotalDueDisplay", formatCurrency(totalDue));
+
+      // 3) Remainder (Total Account Balance - Less Bills - Less Debt - 7397 Savings - 0741 Special Svgs)
+      const savings7397 = num("7397 Savings");
+      const special0741 = num("0741 Special Svgs");
+      const remainder = totalAccountBalance - lessBills - lessDebt - savings7397 - special0741;
+      setText("RemainderDisplay", formatCurrency(remainder));
+      setText("sticky-remainder", formatCurrency(remainder));
+
+      // 4) Fixed Allocations
+      const fixedFields = [
+        "Liz COH ($)",
+        "Liz COH Svgs ($)",
+        "Matt COH ($)",
+        "Matt COH Svgs ($)",
+        "Logan COH ($)",
+        "Logan COH Svgs ($)",
+        "Logan Allowance ($)",
+        "Housecleaning ($)"
+      ];
+      let fixedAllocations = 0;
+      fixedFields.forEach(id => {
+        fixedAllocations += num(id);
+      });
+      setText("FixedAllocationsDisplay", formatCurrency(fixedAllocations));
+
+      // 5) Post Fixed Allocations
+      const postFixed = remainder - fixedAllocations;
+      setText("PostFixedAllocationsDisplay", formatCurrency(postFixed));
+
+      // 6) Sliders base = Post Fixed Allocations (if negative, treat as 0 for slider math)
+      const baseForSliders = postFixed > 0 ? postFixed : 0;
+
+      // Re-sync slider-based $ fields if needed (they already update on input, but we want them to respect new base)
+      // We'll just recompute from percent values:
+      function recomputeFromPercent(percentId, dollarId) {
+        const p = parseFloat(document.getElementById(percentId)?.value || "0");
+        const amt = (baseForSliders * (isNaN(p) ? 0 : p)) / 100;
+        const el = document.getElementById(dollarId);
+        if (el) el.value = isNaN(amt) ? "" : amt.toFixed(2);
+      }
+
+      recomputeFromPercent("% Add to Bal Fwd", "$ Add to Bal Fwd");
+      recomputeFromPercent("% Add to Svgs", "Savings ($)");
+      recomputeFromPercent("% Add to Special Svgs", "Special Savings ($)");
+      recomputeFromPercent("% Add to Investments", "$ Add to Investments");
+
+      // 7) Overrides for Savings / Special Savings
+      const overrideSvgs = num("# Add to Svgs");
+      if (overrideSvgs > 0) {
+        const el = document.getElementById("Savings ($)");
+        if (el) el.value = overrideSvgs.toFixed(2);
+      }
+
+      const overrideSpecial = num("# Add to Special Svgs");
+      if (overrideSpecial > 0) {
+        const el = document.getElementById("Special Savings ($)");
+        if (el) el.value = overrideSpecial.toFixed(2);
+      }
+
+      const savingsDollar = num("Savings ($)");
+      const specialDollar = num("Special Savings ($)");
+      const balFwdDollar = num("$ Add to Bal Fwd");
+      const investDollar = num("$ Add to Investments");
+
+      // 8) Summary allocations
+      const alloc7397 = num("7397 Savings_alloc");
+      const alloc0741 = num("0741 Special Svgs_alloc");
+
+      const totalAllocations =
+        savings7397 +
+        special0741 +
+        fixedAllocations +
+        balFwdDollar +
+        savingsDollar +
+        specialDollar +
+        investDollar +
+        alloc7397 +
+        alloc0741;
+
+      setText("TotalAllocationsDisplay", formatCurrency(totalAllocations));
+
+      // 9) Balance (we'll define as Total Account Balance - (Less Bills + Less Debt + all allocations))
+      const balance =
+        totalAccountBalance -
+        (lessBills +
+          lessDebt +
+          savings7397 +
+          special0741 +
+          fixedAllocations +
+          balFwdDollar +
+          savingsDollar +
+          specialDollar +
+          investDollar +
+          alloc7397 +
+          alloc0741);
+
+      setText("BalanceDisplay", formatCurrency(balance));
+
+      // Balance status suggestion (O-Balance logic)
+      const balanceStatusEl = document.getElementById("Balance Status");
+      const balanceSummaryEl = document.getElementById("BalanceSummary");
+      if (balanceSummaryEl) {
+        balanceSummaryEl.classList.remove(
+          "balance-highlight--ok",
+          "balance-highlight--under",
+          "balance-highlight--over"
+        );
+      }
+
+      let suggestedStatus = "Over";
+      if (Math.abs(balance) < 0.005) {
+        suggestedStatus = "Balanced";
+      } else if (balance > 0) {
+        suggestedStatus = "Under";
+      } else {
+        suggestedStatus = "Over";
+      }
+
+      if (balanceStatusEl && !balanceStatusEl.value) {
+        balanceStatusEl.value = suggestedStatus;
+      }
+
+      if (balanceSummaryEl) {
+        if (suggestedStatus === "Balanced") {
+          balanceSummaryEl.classList.add("balance-highlight--ok");
+        } else if (suggestedStatus === "Under") {
+          balanceSummaryEl.classList.add("balance-highlight--under");
+        } else {
+          balanceSummaryEl.classList.add("balance-highlight--over");
+        }
+      }
+
+      // Sticky paydate
+      const paydateVal = getDateValue("Paydate");
+      setText("sticky-paydate", paydateVal || "—");
+
+      // JSON preview (Notion-friendly)
+      const json = {
+        "Paydate": paydateVal,
+        "Today": getDateValue("Today"),
+        "7419 Main": num("7419 Main"),
+        "7397 Savings": num("7397 Savings"),
+        "9176 Liz COH": num("9176 Liz COH"),
+        "9168 Liz COH Svgs": num("9168 Liz COH Svgs"),
+        "0458 Matt COH": num("0458 Matt COH"),
+        "0466 Matt COH Svgs": num("0466 Matt COH Svgs"),
+        "0741 Special Svgs": num("0741 Special Svgs"),
+        "7889 Logan COH": num("7889 Logan COH"),
+        "3195 Logan COH Svgs": num("3195 Logan COH Svgs"),
+        "Total Account Balance": totalAccountBalance,
+
+        "Balance Status": balanceStatusEl ? balanceStatusEl.value : "",
+        "Less Bills": lessBills,
+        "Less Debt": lessDebt,
+        "Total Due": totalDue,
+        "Remainder": remainder,
+
+        "Liz COH ($)": num("Liz COH ($)"),
+        "Liz COH Svgs ($)": num("Liz COH Svgs ($)"),
+        "Matt COH ($)": num("Matt COH ($)"),
+        "Matt COH Svgs ($)": num("Matt COH Svgs ($)"),
+        "Logan COH ($)": num("Logan COH ($)"),
+        "Logan COH Svgs ($)": num("Logan COH Svgs ($)"),
+        "Logan Allowance ($)": num("Logan Allowance ($)"),
+        "Housecleaning ($)": num("Housecleaning ($)"),
+        "Fixed Allocations": fixedAllocations,
+
+        "Post Fixed Allocations": postFixed,
+        "Post Fixed Allocation Status": document.getElementById("Post Fixed Allocation Status")?.value || "",
+
+        "% Add to Bal Fwd": num("% Add to Bal Fwd"),
+        "$ Add to Bal Fwd": balFwdDollar,
+
+        "% Add to Svgs": num("% Add to Svgs"),
+        "# Add to Svgs": num("# Add to Svgs"),
+        "Savings ($)": savingsDollar,
+
+        "% Add to Special Svgs": num("% Add to Special Svgs"),
+        "# Add to Special Svgs": num("# Add to Special Svgs"),
+        "Special Savings ($)": specialDollar,
+
+        "% Add to Investments": num("% Add to Investments"),
+        "$ Add to Investments": investDollar,
+
+        "7397 Savings_alloc": alloc7397,
+        "0741 Special Svgs_alloc": alloc0741,
+
+        "Total Allocations": totalAllocations,
+        "Balance": balance
+      };
+
+      const jsonEl = document.getElementById("JsonPreview");
+      if (jsonEl) {
+        jsonEl.textContent = JSON.stringify(json, null, 2);
+      }
+    }
+
+    // Bind events
+    function bindInputs() {
+      const inputs = document.querySelectorAll("input, select");
+      inputs.forEach(el => {
+        el.addEventListener("input", recalc);
+        el.addEventListener("change", recalc);
+      });
+
+      // Slider groups
+      bindSliderPercentDollar(
+        "% Add to Bal Fwd_slider",
+        "% Add to Bal Fwd",
+        "$ Add to Bal Fwd",
+        () => {
+          const txt = document.getElementById("PostFixedAllocationsDisplay")?.textContent || "$0.00";
+          return parseFloat(txt.replace(/[^0-9.-]/g, "")) || 0;
+        }
+      );
+
+      bindSliderPercentDollar(
+        "% Add to Svgs_slider",
+        "% Add to Svgs",
+        "Savings ($)",
+        () => {
+          const txt = document.getElementById("PostFixedAllocationsDisplay")?.textContent || "$0.00";
+          return parseFloat(txt.replace(/[^0-9.-]/g, "")) || 0;
+        }
+      );
+
+      bindSliderPercentDollar(
+        "% Add to Special Svgs_slider",
+        "% Add to Special Svgs",
+        "Special Savings ($)",
+        () => {
+          const txt = document.getElementById("PostFixedAllocationsDisplay")?.textContent || "$0.00";
+          return parseFloat(txt.replace(/[^0-9.-]/g, "")) || 0;
+        }
+      );
+
+      bindSliderPercentDollar(
+        "% Add to Investments_slider",
+        "% Add to Investments",
+        "$ Add to Investments",
+        () => {
+          const txt = document.getElementById("PostFixedAllocationsDisplay")?.textContent || "$0.00";
+          return parseFloat(txt.replace(/[^0-9.-]/g, "")) || 0;
+        }
+      );
+    }
+
+    // Initialize
+    window.addEventListener("DOMContentLoaded", () => {
+      // Default Today to today
+      const todayEl = document.getElementById("Today");
+      if (todayEl && !todayEl.value) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        todayEl.value = `${yyyy}-${mm}-${dd}`;
+      }
+
+      bindInputs();
+      recalc();
+    });
+  </script>
+</body>
+</html>
