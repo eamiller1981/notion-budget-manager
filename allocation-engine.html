@@ -951,15 +951,11 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       return;
     }
 
-    /* Validation gate */
-    var xBalance = ['7419','7397','9176','9168','0458','0466','0741','7889','3195']
-      .reduce(function(s,k){
-        var el = document.getElementById('xx-'+k);
-        return s + (parseFloat((el ? el.textContent : '0').replace(/[$,+]/g,''))||0);
-      }, 0);
-
-    if(Math.abs(xBalance) > 0.02){
-      setStatus('⚠ Transfers not balanced (X-Balance = ' + xBalance.toFixed(2) + '). Fix before saving.', true);
+    /* Validation gate — all funds must be allocated (Balance = $0) */
+    var balText = document.getElementById('bal-val').textContent;
+    var bal = parseFloat(balText.replace(/[$,]/g,''))||0;
+    if(Math.abs(bal) > 0.02){
+      setStatus('⚠ Balance must be $0.00 before saving. Currently ' + balText, true);
       return;
     }
 
