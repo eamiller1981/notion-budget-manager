@@ -822,42 +822,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       '% Add to Investments':  { number: notionPct('iv-p') },
       'Investments':           { number: notionNum('iv-d') },
 
-      /* ── Transfer targets (O-…) ── */
-      'O-7419 Main':          { number: xferNum('xo-7419') },
-      'O-7397 Savings':       { number: xferNum('xo-7397') },
-      'O-9176 Liz COH':       { number: xferNum('xo-9176') },
-      'O-9168 Liz COH Svgs':  { number: xferNum('xo-9168') },
-      'O-0458 Matt COH':      { number: xferNum('xo-0458') },
-      'O-0466 Matt COH Svgs': { number: xferNum('xo-0466') },
-      'O-0741 Special Svgs':  { number: xferNum('xo-0741') },
-      'O-7889 Logan COH':     { number: xferNum('xo-7889') },
-      'O-3195 Logan COH Svgs':{ number: xferNum('xo-3195') },
-
-      /* ── Transfer deltas (X-…) ── */
-      'X-7419 Main':          { number: xferNum('xx-7419') },
-      'X-7397 Savings':       { number: xferNum('xx-7397') },
-      'X-9176 Liz COH':       { number: xferNum('xx-9176') },
-      'X-9168 Liz COH Svgs':  { number: xferNum('xx-9168') },
-      'X-0458 Matt COH':      { number: xferNum('xx-0458') },
-      'X-0466 Matt COH Svgs': { number: xferNum('xx-0466') },
-      'X-0741 Special Svgs':  { number: xferNum('xx-0741') },
-      'X-7889 Logan COH':     { number: xferNum('xx-7889') },
-      'X-3195 Logan COH Svgs':{ number: xferNum('xx-3195') },
-
-      /* ── Validation fields (written for audit, not shown in UI) ── */
-      'X-Balance':      { number: (function(){
-        var keys=['7419','7397','9176','9168','0458','0466','0741','7889','3195'];
-        return keys.reduce(function(s,k){ return s+xferNum('xx-'+k); },0);
-      })() },
-      'X-Balance Diff': { number: (function(){
-        var tab = sumClass('account-input');
-        var xb  = ['7419','7397','9176','9168','0458','0466','0741','7889','3195']
-          .reduce(function(s,k){ return s+xferNum('xx-'+k); },0);
-        return tab - xb;
-      })() },
-      'X-Balance Status': { rich_text: [{ text: { content:
-        document.getElementById('xbal-status').textContent
-      }}]},
     };
 
     return payload;
