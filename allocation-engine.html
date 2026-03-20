@@ -929,9 +929,9 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       if(newPage.object === 'error') throw new Error(newPage.message);
       currentPageId = newPage.id;
 
-      /* Step 3: populate UI immediately — no wait needed */
-      document.getElementById('fx-bills').value = billsSnapshot;
-      document.getElementById('fx-debt').value  = debtSnapshot;
+      /* Step 3: populate UI immediately — rounded to 2dp */
+      document.getElementById('fx-bills').value = parseFloat(billsSnapshot.toFixed(2));
+      document.getElementById('fx-debt').value  = parseFloat(debtSnapshot.toFixed(2));
       recalcTotals();
       resyncAllocDollars();
       recalcBalance();
