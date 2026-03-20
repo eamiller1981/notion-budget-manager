@@ -848,7 +848,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 
   /* ════════════════════════════════════════════════════════
    * SYNC STATE
-   * currentPageId: the Notion page ID of the active run.
+   * currentPageId: Notion page ID of the active run.
    *   Set when paydate is entered (new record created).
    *   Used by Save to PATCH rather than create.
    * ════════════════════════════════════════════════════════ */
@@ -862,68 +862,63 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     return prop.number;
   }
 
-  /* ── helper: populate bills + debt from a page's properties ── */
-  function populateBillsDebt(props){
-    var bills = notionPropNum(props['Less Bills']);
-    var debt  = notionPropNum(props['Less Debt']);
-    if(bills !== null && bills !== undefined){
-      document.getElementById('fx-bills').value = bills;
-    }
-    if(debt !== null && debt !== undefined){
-      document.getElementById('fx-debt').value = debt;
-    }
-    recalcTotals();
-    resyncAllocDollars();
-    recalcBalance();
-    recalcTransfers();
-  }
-
-  /* ── PAYDATE ENTERED: create new Current Run record, then fetch rollups ── */
+  /* ── PAYDATE ENTERED: snapshot bills/debt from old record, create new ── */
   document.getElementById('paydate').addEventListener('change', function(){
     var paydateVal = this.value;
     if(!paydateVal) return;
 
     setStatus('Creating pay period in Notion…');
 
-    /* Step 1: find and demote any existing Current Run = true */
+    var billsSnapshot = 0;
+    var debtSnapshot  = 0;
+
+    /* Step 1: find old Current Run, read live rollups before demoting */
     notionFetch('/databases/' + DATABASE_ID + '/query', 'POST', {
       filter: { property: 'Current Run', checkbox: { equals: true } },
       page_size: 1
     })
     .then(function(data){
       var patch = Promise.resolve();
+
       if(data.results && data.results.length){
+        var oldProps = data.results[0].properties;
+
+        /* Snapshot Bills Due Today + Debt Due Today from the live record */
+        billsSnapshot = notionPropNum(oldProps['Bills Due Today']) || 0;
+        debtSnapshot  = notionPropNum(oldProps['Debt Due Today'])  || 0;
+
+        /* Demote old record */
         patch = notionFetch('/pages/' + data.results[0].id, 'PATCH', {
           properties: { 'Current Run': { checkbox: false } }
         });
       }
+
       return patch;
     })
     .then(function(){
-      /* Step 2: create new record with Current Run = true + Paydate + Today only */
+      /* Step 2: create new record with snapshots written as plain numbers */
       return notionFetch('/pages', 'POST', {
         parent: { database_id: DATABASE_ID },
         properties: {
           'Current Run': { checkbox: true },
           'Paydate':     { date: { start: paydateVal } },
-          'Today':       { date: { start: new Date().toISOString().split('T')[0] } }
+          'Today':       { date: { start: new Date().toISOString().split('T')[0] } },
+          'Less Bills':  { number: billsSnapshot },
+          'Less Debt':   { number: debtSnapshot }
         }
       });
     })
     .then(function(newPage){
       if(newPage.object === 'error') throw new Error(newPage.message);
       currentPageId = newPage.id;
-      setStatus('Pay period created. Fetching bill totals…');
 
-      /* Step 3: wait 2s for Notion rollups to compute, then re-fetch */
-      return new Promise(function(resolve){ setTimeout(resolve, 2000); })
-        .then(function(){
-          return notionFetch('/pages/' + currentPageId, 'GET');
-        });
-    })
-    .then(function(page){
-      if(page.object === 'error') throw new Error(page.message);
-      populateBillsDebt(page.properties);
+      /* Step 3: populate UI immediately — no wait needed */
+      document.getElementById('fx-bills').value = billsSnapshot;
+      document.getElementById('fx-debt').value  = debtSnapshot;
+      recalcTotals();
+      resyncAllocDollars();
+      recalcBalance();
+      recalcTransfers();
       setStatus('');
     })
     .catch(function(err){
@@ -956,7 +951,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     btn.style.opacity = '0.6';
     setStatus('Saving…');
 
-    /* PATCH the record that was created when paydate was entered */
+    /* PATCH the record created at paydate entry */
     notionFetch('/pages/' + currentPageId, 'PATCH', {
       properties: buildPayload(true)
     })
@@ -975,3 +970,5 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 
 })();
 </script>
+</body>
+</html>
