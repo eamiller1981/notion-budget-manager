@@ -483,6 +483,19 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 </div><!-- /card -->
 </div><!-- /transfers grid -->
 
+<!-- ══ SUBMIT BAR ════════════════════════════════════════ -->
+<div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:20px 28px 8px;flex-wrap:wrap">
+  <button id="notion-submit" onclick="saveToNotion()" style="
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:14px;font-weight:600;
+    background:#b77b82;color:#fef9f6;
+    border:none;border-radius:999px;
+    padding:12px 32px;cursor:pointer;
+    letter-spacing:.03em;transition:opacity .18s;
+  ">Save to Notion</button>
+  <div id="notion-status" style="font-size:12px;color:#8a6a6a;font-style:italic"></div>
+</div>
+
 <div style="text-align:center;padding:24px 0;font-size:11px;color:#c4adad;letter-spacing:.08em">✿ &nbsp; Allocation Engine &nbsp; ✿</div>
 
 <script>
@@ -707,10 +720,226 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     });
   });
 
-  /* ── init ── */
-  recalcTotals();
-  recalcBalance();
-  recalcTransfers();
+  /* ════════════════════════════════════════════════════════
+   * NOTION SYNC
+   * ════════════════════════════════════════════════════════
+   * Architecture: HTML (GitHub Pages) → Cloudflare Worker proxy → Notion API
+   * Token lives only in the Worker environment variable — never here.
+   *
+   * ── CONFIGURE THESE TWO VALUES ──────────────────────── */
+  var PROXY_URL    = 'https://notion-budget-manager.eamiller1981.workers.dev';
+  var DATABASE_ID  = '311627ee81db80b8ae51c5b7c8ed83bb';
+  /* ─────────────────────────────────────────────────────── */
+
+  /* ── helpers ── */
+  function notionNum(id){ return parseFloat(document.getElementById(id).value)||0; }
+  function notionPct(id){ return Math.round(parseFloat(document.getElementById(id).value)||0) / 100; }
+  function notionDate(id){
+    var v = document.getElementById(id).value;
+    return v ? { start: v } : null;
+  }
+
+  /* ── status display ── */
+  function setStatus(msg, isError){
+    var el = document.getElementById('notion-status');
+    el.textContent = msg;
+    el.style.color = isError ? '#8c3a42' : '#4a6e3a';
+  }
+
+  /* ── proxy fetch wrapper ── */
+  function notionFetch(path, method, body){
+    return fetch(PROXY_URL + '/notion' + path, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function(r){ return r.json(); });
+  }
+
+  /* ── build the full Notion properties payload ── */
+  function buildPayload(currentRun){
+
+    /* Collect all X and O values from the transfer table */
+    function xferNum(id){
+      var el = document.getElementById(id);
+      if(!el) return 0;
+      /* Strip $ + commas and parse */
+      return parseFloat((el.textContent||'0').replace(/[$,+]/g,''))||0;
+    }
+
+    var payload = {
+      /* ── Lifecycle ── */
+      'Current Run': { checkbox: currentRun },
+
+      /* ── Dates ── */
+      'Paydate': { date: notionDate('paydate') },
+      'Today':   { date: notionDate('today') },
+
+      /* ── Account balances ── */
+      '7419 Main':          { number: notionNum('a7419') },
+      '7397 Savings':       { number: notionNum('a7397') },
+      '9176 Liz COH':       { number: notionNum('a9176') },
+      '9168 Liz COH Svgs':  { number: notionNum('a9168') },
+      '0458 Matt COH':      { number: notionNum('a0458') },
+      '0466 Matt COH Svgs': { number: notionNum('a0466') },
+      '0741 Special Svgs':  { number: notionNum('a0741') },
+      '7889 Logan COH':     { number: notionNum('a7889') },
+      '3195 Logan COH Svgs':{ number: notionNum('a3195') },
+
+      /* ── Fixed expenses (discretionary COH) ── */
+      'Liz COH ($)':        { number: notionNum('fx-liz-coh') },
+      'Liz COH Svgs ($)':   { number: notionNum('fx-liz-svgs') },
+      'Matt COH ($)':       { number: notionNum('fx-matt-coh') },
+      'Matt COH Svgs ($)':  { number: notionNum('fx-matt-svgs') },
+      'Logan COH ($)':      { number: notionNum('fx-logan-coh') },
+      'Logan COH Svgs ($)': { number: notionNum('fx-logan-svgs') },
+      'Logan Allowance ($)':{ number: notionNum('fx-allow') },
+      'Housecleaning ($)':  { number: notionNum('fx-clean') },
+
+      /* ── Payday allocations ── */
+      '% Add to Bal Fwd':      { number: notionPct('bf-p') },
+      '$ Add to Bal Fwd':      { number: notionNum('bf-d') },
+      '% Add to Svgs':         { number: notionPct('sv-p') },
+      '# Add to Svgs':         { number: notionNum('sv-d') },
+      '% Add to Special Svgs': { number: notionPct('ss-p') },
+      '# Add to Special Svgs': { number: notionNum('ss-d') },
+      '% Add to Investments':  { number: notionPct('iv-p') },
+      'Investments':           { number: notionNum('iv-d') },
+
+      /* ── Transfer targets (O-…) ── */
+      'O-7419 Main':          { number: xferNum('xo-7419') },
+      'O-7397 Savings':       { number: xferNum('xo-7397') },
+      'O-9176 Liz COH':       { number: xferNum('xo-9176') },
+      'O-9168 Liz COH Svgs':  { number: xferNum('xo-9168') },
+      'O-0458 Matt COH':      { number: xferNum('xo-0458') },
+      'O-0466 Matt COH Svgs': { number: xferNum('xo-0466') },
+      'O-0741 Special Svgs':  { number: xferNum('xo-0741') },
+      'O-7889 Logan COH':     { number: xferNum('xo-7889') },
+      'O-3195 Logan COH Svgs':{ number: xferNum('xo-3195') },
+
+      /* ── Transfer deltas (X-…) ── */
+      'X-7419 Main':          { number: xferNum('xx-7419') },
+      'X-7397 Savings':       { number: xferNum('xx-7397') },
+      'X-9176 Liz COH':       { number: xferNum('xx-9176') },
+      'X-9168 Liz COH Svgs':  { number: xferNum('xx-9168') },
+      'X-0458 Matt COH':      { number: xferNum('xx-0458') },
+      'X-0466 Matt COH Svgs': { number: xferNum('xx-0466') },
+      'X-0741 Special Svgs':  { number: xferNum('xx-0741') },
+      'X-7889 Logan COH':     { number: xferNum('xx-7889') },
+      'X-3195 Logan COH Svgs':{ number: xferNum('xx-3195') },
+
+      /* ── Validation fields (written for audit, not shown in UI) ── */
+      'X-Balance':      { number: (function(){
+        var keys=['7419','7397','9176','9168','0458','0466','0741','7889','3195'];
+        return keys.reduce(function(s,k){ return s+xferNum('xx-'+k); },0);
+      })() },
+      'X-Balance Diff': { number: (function(){
+        var tab = sumClass('account-input');
+        var xb  = ['7419','7397','9176','9168','0458','0466','0741','7889','3195']
+          .reduce(function(s,k){ return s+xferNum('xx-'+k); },0);
+        return tab - xb;
+      })() },
+      'X-Balance Status': { rich_text: [{ text: { content:
+        document.getElementById('xbal-status').textContent
+      }}]},
+    };
+
+    return payload;
+  }
+
+  /* ── PAGE LOAD: pre-populate Bills + Less Debt from Notion ── */
+  window.addEventListener('load', function(){
+    if(PROXY_URL.indexOf('YOUR-WORKER') !== -1) return; /* skip if not configured */
+    setStatus('Loading from Notion…');
+    notionFetch('/databases/' + DATABASE_ID + '/query', 'POST', {
+      filter: { property: 'Current Run', checkbox: { equals: true } },
+      page_size: 1
+    }).then(function(data){
+      if(!data.results || !data.results.length){
+        setStatus('No current run found in Notion.', true);
+        return;
+      }
+      var props = data.results[0].properties;
+
+      /* Pre-populate Bills (Less Bills in Notion) */
+      var bills = props['Less Bills'] && props['Less Bills'].number;
+      if(bills !== null && bills !== undefined){
+        document.getElementById('fx-bills').value = bills;
+      }
+
+      /* Pre-populate Debt Paydown (Less Debt in Notion) */
+      var debt = props['Less Debt'] && props['Less Debt'].number;
+      if(debt !== null && debt !== undefined){
+        document.getElementById('fx-debt').value = debt;
+      }
+
+      recalcTotals();
+      resyncAllocDollars();
+      recalcBalance();
+      recalcTransfers();
+      setStatus('');
+    }).catch(function(err){
+      setStatus('Could not load from Notion: ' + err.message, true);
+    });
+  });
+
+  /* ── SAVE: validate → patch old Current Run → create new record ── */
+  window.saveToNotion = function(){
+    /* 1. Validation gate */
+    var xBalance = ['7419','7397','9176','9168','0458','0466','0741','7889','3195']
+      .reduce(function(s,k){
+        var el = document.getElementById('xx-'+k);
+        return s + (parseFloat((el ? el.textContent : '0').replace(/[$,+]/g,''))||0);
+      }, 0);
+
+    if(Math.abs(xBalance) > 0.02){
+      setStatus('⚠ Transfers not balanced (X-Balance = ' + xBalance.toFixed(2) + '). Fix before saving.', true);
+      return;
+    }
+
+    var btn = document.getElementById('notion-submit');
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    setStatus('Saving…');
+
+    /* 2. Find existing Current Run = true record */
+    notionFetch('/databases/' + DATABASE_ID + '/query', 'POST', {
+      filter: { property: 'Current Run', checkbox: { equals: true } },
+      page_size: 1
+    })
+    .then(function(data){
+      var patchPromise = Promise.resolve();
+
+      if(data.results && data.results.length){
+        /* 3. Patch existing record: Current Run → false */
+        var existingId = data.results[0].id;
+        patchPromise = notionFetch('/pages/' + existingId, 'PATCH', {
+          properties: { 'Current Run': { checkbox: false } }
+        });
+      }
+
+      return patchPromise;
+    })
+    .then(function(){
+      /* 4. Create new record with Current Run = true */
+      return notionFetch('/pages', 'POST', {
+        parent: { database_id: DATABASE_ID },
+        properties: buildPayload(true)
+      });
+    })
+    .then(function(result){
+      if(result.object === 'error'){
+        throw new Error(result.message);
+      }
+      setStatus('✔ Saved to Notion');
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    })
+    .catch(function(err){
+      setStatus('Error: ' + err.message, true);
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    });
+  };
 
 })();
 </script>
