@@ -428,10 +428,10 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       if(!data.results||!data.results.length){setStatus('No current run found in Notion.',true);return;}
       var props=data.results[0].properties;
       var billsProp=props['Less Bills'];
-      var bills=billsProp?(billsProp.formula?billsProp.formula.number:billsProp.number):null;
+     var bills=billsProp?(billsProp.rollup?billsProp.rollup.number:billsProp.formula?billsProp.formula.number:billsProp.number):null;
       if(bills!==null&&bills!==undefined){document.getElementById('fx-bills').value=bills;}
       var debtProp=props['Less Debt'];
-      var debt=debtProp?(debtProp.formula?debtProp.formula.number:debtProp.number):null;
+     var debt=debtProp?(debtProp.rollup?debtProp.rollup.number:debtProp.formula?debtProp.formula.number:debtProp.number):null;
       if(debt!==null&&debt!==undefined){document.getElementById('fx-debt').value=debt;}
       recalcTotals();resyncAllocDollars();recalcBalance();recalcTransfers();
       setStatus('');
