@@ -570,11 +570,13 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     setPillState(document.getElementById('tb-bal'), bal);
   }
 
-  /* ── resyncAllocDollars: re-derive $ from % for all groups (only on remainder change) ── */
+  /* ── resyncAllocDollars: re-derive $ from % when remainder changes.
+        Only syncs groups where % is the authoritative source (not dollar-first edits). ── */
   function resyncAllocDollars(){
     var rem = getRemainder();
     groups.forEach(function(g){
       var pct = parseFloat(document.getElementById(g.p).value)||0;
+      /* Only re-derive if a % is set; preserves direct $ entries that back-calculated % */
       var dol = rem>0?(pct/100)*rem:0;
       document.getElementById(g.d).value = dol>0?dol.toFixed(2):'';
     });
@@ -682,7 +684,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     });
   });
 
-  /* ── alloc group wiring: each handler updates only its two siblings, then balance ── */
+  /* ── alloc group wiring: fully bidirectional, no overwrite ── */
   groups.forEach(function(g){
     var S=document.getElementById(g.s);
     var P=document.getElementById(g.p);
@@ -708,7 +710,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       recalcTransfers();
     });
 
-    /* $ typed → back-calc % and move slider. Do NOT re-derive $ (user is editing it). */
+    /* $ typed → back-calc % and move slider */
     D.addEventListener('input',function(){
       var dol = parseFloat(D.value)||0;
       var r   = getRemainder();
@@ -717,6 +719,21 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       S.value = pct;
       recalcBalance();
       recalcTransfers();
+    });
+
+    /* $ blur → round to 2 decimal places */
+    D.addEventListener('blur',function(){
+      var dol = parseFloat(D.value);
+      if(!isNaN(dol)) D.value = dol.toFixed(2);
+    });
+  });
+
+  /* ── bills/debt blur → round to 2 decimal places ── */
+  ['fx-bills','fx-debt'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('blur',function(){
+      var v = parseFloat(this.value);
+      if(!isNaN(v)) this.value = v.toFixed(2);
     });
   });
 
