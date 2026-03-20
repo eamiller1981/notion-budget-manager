@@ -860,14 +860,20 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       }
       var props = data.results[0].properties;
 
-      /* Pre-populate Bills (Less Bills in Notion) */
-      var bills = props['Less Bills'] && props['Less Bills'].number;
+      /* Pre-populate Bills (Less Bills in Notion — may be formula or number type) */
+      var billsProp = props['Less Bills'];
+      var bills = billsProp
+        ? (billsProp.formula ? billsProp.formula.number : billsProp.number)
+        : null;
       if(bills !== null && bills !== undefined){
         document.getElementById('fx-bills').value = bills;
       }
 
-      /* Pre-populate Debt Paydown (Less Debt in Notion) */
-      var debt = props['Less Debt'] && props['Less Debt'].number;
+      /* Pre-populate Debt Paydown (Less Debt in Notion — may be formula or number type) */
+      var debtProp = props['Less Debt'];
+      var debt = debtProp
+        ? (debtProp.formula ? debtProp.formula.number : debtProp.number)
+        : null;
       if(debt !== null && debt !== undefined){
         document.getElementById('fx-debt').value = debt;
       }
