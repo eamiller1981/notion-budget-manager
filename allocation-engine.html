@@ -7,15 +7,15 @@
 <style>
 :root {
   --blush:      #b77b82;
-  --blush-soft: #f2c4c8;
+  --blush-soft: #f2c4c8;  /* slider track, kept soft */
   --deep-blush: #c4848e;
   --cream:      #fdf4ee;
   --cream-card: #fef9f6;
   --charcoal:   #3c3232;
   --rose-gray:  #c4adad;
   --mint:       #9CAF88;
-  --neg-color:  #F5DDDC;
-  --pos-color:  #AF9CCB;
+  --neg-color:  #F5DDDC;   /* misty rose — under */
+  --pos-color:  #AF9CCB;   /* wisteria — over */
   --light-gray: #e4e0de;
   --border:     #e2c8c2;
   --input-bg:   #fdf0eb;
@@ -29,35 +29,78 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--cream);color:var(--charcoal);font-size:15px;line-height:1.6;min-height:100vh;display:block;width:100%}
-.top-bar{position:sticky;top:0;z-index:100;background:var(--cream-card);border-bottom:1.5px solid var(--border);min-height:66px;display:flex;align-items:center;justify-content:center;padding:10px 28px;gap:28px;flex-wrap:wrap;}
-.top-bar__item{display:flex;flex-direction:column;align-items:center;gap:2px}
+
+/* ══ STICKY BAR — centered ② */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:var(--cream-card);border-bottom:1.5px solid var(--border);
+  min-height:66px;display:flex;align-items:center;justify-content:center; /* ① */
+  padding:10px 28px;gap:28px;flex-wrap:wrap;
+}
+.top-bar__item{display:flex;flex-direction:column;align-items:center;gap:2px} /* ① center items */
 .top-bar__label{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--label)}
 .top-bar__value{font-size:15px;font-weight:600;color:var(--charcoal)}
 .top-bar__div{width:1px;height:30px;background:var(--border);flex-shrink:0}
+
+/* balance pill — 3 states */
 .b-pill{display:inline-flex;align-items:center;padding:6px 20px;border-radius:var(--r-pill);font-weight:700;font-size:15px;white-space:nowrap}
 .b-zero{background:var(--mint);color:var(--charcoal)}
-.b-neg{background:var(--neg-color);color:var(--charcoal)}
-.b-pos{background:var(--pos-color);color:var(--charcoal)}
-.page-header{padding:36px 28px 6px;text-align:center}
+.b-neg {background:var(--neg-color);color:var(--charcoal)}
+.b-pos {background:var(--pos-color);color:var(--charcoal)}
+
+/* ══ PAGE HEADER — centered ③ */
+.page-header{padding:36px 28px 6px;text-align:center} /* ② */
 .page-header__eye{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--deep-blush);margin-bottom:6px}
 .page-header__title{font-family:var(--serif);font-size:clamp(38px,6vw,60px);font-weight:normal;color:var(--charcoal);letter-spacing:-.015em;line-height:1.02}
 .page-header__title em{font-style:italic;color:var(--deep-blush)}
+
+/* ③ extended centered ornament */
 .ornament-wrap{display:flex;justify-content:center;padding:12px 28px 4px}
 .ornament-wrap svg{width:min(680px,92vw);height:22px;opacity:.55}
+
+/* ══ GRID */
 .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:14px 28px 60px;max-width:1200px;margin:0 auto}
 .span-full{grid-column:1/-1}
-.card{background:var(--cream-card);border:1.5px solid var(--border);border-radius:var(--r-card);padding:24px 22px 26px;}
-.card__heading{font-family:var(--serif);font-size:21px;font-weight:normal;color:var(--charcoal);letter-spacing:-.01em;margin-bottom:18px;}
+
+/* ══ CARD — no dashed inner border ⑥, no decorative rose ⑦ */
+.card{
+  background:var(--cream-card);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-card);
+  padding:24px 22px 26px;
+}
+
+/* ══ HEADINGS — no drop-cap accent ⑤, unified font */
+.card__heading{
+  font-family:var(--serif);
+  font-size:21px;font-weight:normal;
+  color:var(--charcoal);letter-spacing:-.01em;
+  margin-bottom:18px;
+}
+
+/* ══ DATE BAR */
 .date-bar-inner{display:flex;gap:24px;align-items:flex-end}
 .date-bar-field{display:flex;flex-direction:column;gap:5px;flex:1}
 .date-bar-field label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--label)}
+
+/* ══ FIELDS */
 .field-stack{display:flex;flex-direction:column;gap:11px}
 .field-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .field-row label{font-size:13px;font-weight:500;color:var(--charcoal);flex:1;white-space:nowrap}
 .field-row .fi{width:132px;flex-shrink:0}
-input[type="text"],input[type="date"],input[type="number"]{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--r-input);background:var(--input-bg);color:var(--charcoal);font-family:var(--sans);font-size:14px;font-weight:500;outline:none;transition:border-color .18s;-webkit-appearance:none;}
+
+/* ══ INPUTS */
+input[type="text"],input[type="date"],input[type="number"]{
+  width:100%;padding:8px 12px;
+  border:1.5px solid var(--border);border-radius:var(--r-input);
+  background:var(--input-bg);color:var(--charcoal);
+  font-family:var(--sans);font-size:14px;font-weight:500;
+  outline:none;transition:border-color .18s;-webkit-appearance:none;
+}
 input:focus{border-color:var(--deep-blush)}
 input::placeholder{color:var(--rose-gray);font-weight:400}
+
+/* affix wrapper */
 .afx{position:relative;display:inline-flex;align-items:center;width:100%}
 .sym{position:absolute;font-size:12px;color:var(--label);pointer-events:none}
 .sym-l{left:10px}.sym-r{right:10px}
@@ -65,39 +108,102 @@ input::placeholder{color:var(--rose-gray);font-weight:400}
 .afx input.pr{padding-right:20px}
 .fi .afx{width:100%}
 .fi .afx input{width:132px}
-.h1pill{display:flex;align-items:center;justify-content:space-between;background:var(--blush);border-radius:var(--r-pill);padding:14px 22px;margin-top:20px;}
+
+/* ══ LARGE H1 PILL (Total / Fixed / Remainder / Balance) */
+.h1pill{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--blush);border-radius:var(--r-pill);
+  padding:14px 22px;margin-top:20px;
+}
 .h1pill.b-neg-pill{background:var(--neg-color)}
 .h1pill.b-pos-pill{background:var(--pos-color)}
 .h1pill.b-zero-pill{background:var(--mint)}
 .h1pill__lbl{font-family:var(--serif);font-size:17px;font-weight:normal;color:#fef9f6}
 .h1pill__val{font-family:var(--serif);font-size:22px;font-weight:bold;color:#fef9f6}
+/* all three balance states use dark text (colors are light/mid) */
 .h1pill.b-neg-pill .h1pill__lbl,.h1pill.b-neg-pill .h1pill__val,
 .h1pill.b-pos-pill .h1pill__lbl,.h1pill.b-pos-pill .h1pill__val,
 .h1pill.b-zero-pill .h1pill__lbl,.h1pill.b-zero-pill .h1pill__val{color:var(--charcoal)}
+
 .field-divider{height:1px;background:var(--border);margin:4px 0}
+
+
+
+
+/* ══ ALLOC BLOCK */
 .ablock{border:1.5px solid var(--border);border-radius:12px;padding:16px 16px 14px;background:var(--input-bg);display:flex;flex-direction:column;gap:13px;margin-top:14px}
 .ablock__title{font-family:var(--serif);font-size:16px;font-weight:normal;color:var(--charcoal)}
+
+/* ══ SLIDER ROW — slider 60% ⑭ */
+.slider-row{display:flex;flex-direction:column;gap:7px}
 .row-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--label)}
+
+/* grid: 60% slider | % field | $ field */
 .triple{display:grid;grid-template-columns:60% 100px 128px;align-items:center;gap:10px}
-input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;background:var(--blush-soft);outline:none;border:none;cursor:pointer;padding:0;}
+
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:5px;border-radius:999px;
+  background:var(--blush-soft);outline:none;border:none;cursor:pointer;padding:0;
+}
 input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--deep-blush);border:2.5px solid var(--cream-card);cursor:pointer}
 input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--deep-blush);border:2.5px solid var(--cream-card);cursor:pointer}
+
+/* % and $ inputs inside triple */
 .triple .afx{width:100%}
 .triple .afx input.pr{width:100px;text-align:center}
 .triple .afx input.pl{width:128px;text-align:right}
-.xfer-table{margin-top:18px;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;}
-.xfer-hrow,.xfer-row{display:grid;grid-template-columns:1fr 110px 110px 160px 160px 110px;gap:0;}
+
+/* sub-row (Savings $, Special Savings $) */
+.sub-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sub-row label{font-size:13px;font-weight:500;color:var(--charcoal);flex:1}
+.sub-row .afx{width:128px;flex-shrink:0}
+.sub-row .afx input{width:128px;text-align:right}
+
+/* ══ FOOTER */
+.footer{padding:24px 0;font-size:11px;color:var(--rose-gray);letter-spacing:.08em;text-align:center;position:relative;left:0;right:0;width:100%}
+
+/* ══ TRANSFERS TABLE */
+.xfer-table{
+  margin-top:18px;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+.xfer-hrow,.xfer-row{
+  display:grid;
+  grid-template-columns:1fr 110px 110px 160px 160px 110px;
+  gap:0;
+}
 .xfer-hrow{background:#fdf4ee;border-bottom:1.5px solid var(--border)}
-.xfer-hcell{padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--label);text-align:left;display:flex;align-items:center;}
+.xfer-hcell{
+  padding:9px 14px;
+  font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--label);
+  text-align:left;
+  display:flex;align-items:center;  /* middle-align vertically */
+}
 .xfer-row{border-bottom:1px solid var(--border);background:#fdf9f6}
 .xfer-row:last-child{border-bottom:none}
-.xfer-cell{padding:10px 14px;font-size:13px;font-weight:500;font-family:var(--sans);color:var(--charcoal);display:flex;align-items:center;justify-content:flex-start;}
+.xfer-cell{
+  padding:10px 14px;
+  font-size:13px;font-weight:500;
+  font-family:var(--sans);
+  color:var(--charcoal);
+  display:flex;align-items:center;
+  justify-content:flex-start;
+}
+/* amount: bold, positive = dark sage, negative = deeper rose, zero = muted */
 .xfer-cell.xfer-amt{font-weight:700}
 .xfer-row.xr-pos .xfer-amt{color:#3a5e2a}
 .xfer-row.xr-neg .xfer-amt{color:#8c3a42}
 .xfer-row.xr-zero .xfer-amt{color:var(--rose-gray)}
+/* no row tinting */
 .xfer-row.xr-pos,.xfer-row.xr-neg,.xfer-row.xr-zero{background:#fdf9f6}
+/* routing cells — slightly muted, same charcoal */
 .xfer-cell.xfer-route{font-size:12px;color:var(--charcoal)}
+
+/* ══ RESPONSIVE */
 @media(max-width:740px){
   .main-grid{grid-template-columns:1fr;padding:12px 14px 48px}
   .span-full{grid-column:1}
@@ -110,6 +216,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 </head>
 <body>
 
+<!-- ══ STICKY BAR ══════════════════════════════════════════ -->
 <div class="top-bar">
   <div class="top-bar__item">
     <span class="top-bar__label">Pay Date</span>
@@ -127,11 +234,13 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
   </div>
 </div>
 
+<!-- ══ PAGE HEADER — centered ══════════════════════════════ -->
 <div class="page-header">
   <div class="page-header__eye">Budget Workflow</div>
   <h1 class="page-header__title">Allocation <em>Engine</em></h1>
 </div>
 
+<!-- ③ extended centered ornament -->
 <div class="ornament-wrap">
   <svg viewBox="0 0 680 22" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <line x1="0" y1="11" x2="274" y2="11" stroke="#dda0a8" stroke-width="1"/>
@@ -143,8 +252,10 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
   </svg>
 </div>
 
+<!-- ══ GRID ════════════════════════════════════════════════ -->
 <div class="main-grid">
 
+  <!-- DATE BAR -->
   <div class="card span-full" style="padding:18px 24px">
     <div class="date-bar-inner">
       <div class="date-bar-field">
@@ -158,6 +269,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     </div>
   </div>
 
+  <!-- SECTION 1: ACCOUNT BALANCES -->
   <div class="card">
     <h2 class="card__heading">Account Balances</h2>
     <div class="field-stack">
@@ -177,6 +289,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     </div>
   </div>
 
+  <!-- SECTION 2: FIXED EXPENSES — Bills + Debt Paydown added at top ⑧ -->
   <div class="card">
     <h2 class="card__heading">Fixed Expenses</h2>
     <div class="field-stack">
@@ -193,11 +306,12 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       <div class="field-row"><label for="fx-clean">Housecleaning</label><div class="fi afx"><span class="sym sym-l">$</span><input type="number" id="fx-clean" class="pl fixed-input" value="250" step="0.01"/></div></div>
     </div>
     <div class="h1pill">
-      <span class="h1pill__lbl">Fixed Expenses</span>
-      <span class="h1pill__val" id="fixed-total">$1,750.00</span>
-    </div>
+        <span class="h1pill__lbl">Fixed Expenses</span>
+        <span class="h1pill__val" id="fixed-total">$1,750.00</span>
+      </div>
   </div>
 
+  <!-- SECTION 3: PAYDAY ALLOCATIONS — no formula box ⑬, no subheading ⑪ -->
   <div class="card span-full">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:0">
       <h2 class="card__heading" style="margin-bottom:0">Payday Allocations</h2>
@@ -206,6 +320,8 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
         <span class="h1pill__val" id="remainder">$0.00</span>
       </div>
     </div>
+
+    <!-- Balance Forward -->
     <div class="ablock">
       <div class="ablock__title">Balance Forward</div>
       <div class="row-label">% Add to Bal Fwd</div>
@@ -215,6 +331,8 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
         <div class="afx"><span class="sym sym-l">$</span><input type="number" id="bf-d" class="pl" placeholder="0.00" step="0.01"/></div>
       </div>
     </div>
+
+    <!-- Savings -->
     <div class="ablock">
       <div class="ablock__title">Savings</div>
       <div class="row-label">% Add to Svgs</div>
@@ -224,6 +342,8 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
         <div class="afx"><span class="sym sym-l">$</span><input type="number" id="sv-d" class="pl" placeholder="0.00" step="0.01"/></div>
       </div>
     </div>
+
+    <!-- Special Savings -->
     <div class="ablock">
       <div class="ablock__title">Special Savings</div>
       <div class="row-label">% Add to Special Svgs</div>
@@ -233,6 +353,8 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
         <div class="afx"><span class="sym sym-l">$</span><input type="number" id="ss-d" class="pl" placeholder="0.00" step="0.01"/></div>
       </div>
     </div>
+
+    <!-- Investments -->
     <div class="ablock">
       <div class="ablock__title">Investments</div>
       <div class="row-label">% Add to Investments</div>
@@ -242,16 +364,25 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
         <div class="afx"><span class="sym sym-l">$</span><input type="number" id="iv-d" class="pl" placeholder="0.00" step="0.01"/></div>
       </div>
     </div>
+
+    <!-- ⑫ Balance as h1pill (no separate card), with color logic -->
     <div class="h1pill b-zero-pill" id="bal-pill" style="margin-top:22px">
       <span class="h1pill__lbl">Balance</span>
       <span class="h1pill__val" id="bal-val">$0.00</span>
     </div>
+
   </div>
 
-</div>
+</div><!-- /grid -->
 
+<!-- ══════════════════════════════════════════════════════
+     SECTION 4: TRANSFERS  —  display-only, computed from Sections 1–3
+     Field names match Notion "Budget Run" → "Transfers" view exactly.
+═══════════════════════════════════════════════════════════ -->
 <div class="main-grid" style="padding-top:0">
 <div class="card span-full" style="background:#f0ddd4;border-color:#ddc4bc">
+
+  <!-- Heading row + Transfer Balance pill -->
   <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:0">
     <h2 class="card__heading" style="margin-bottom:0">Transfers</h2>
     <div class="h1pill b-zero-pill" id="xbal-status-pill" style="margin-top:0;width:calc(50% - 9px - 22px)">
@@ -259,7 +390,11 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       <span class="h1pill__val" id="xbal-status">—</span>
     </div>
   </div>
+
+  <!-- Transfer table -->
   <div class="xfer-table">
+
+    <!-- Header -->
     <div class="xfer-hrow">
       <div class="xfer-hcell">Account</div>
       <div class="xfer-hcell">Current Balance</div>
@@ -268,21 +403,96 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       <div class="xfer-hcell">To Account</div>
       <div class="xfer-hcell">Amount ($)</div>
     </div>
-    <div class="xfer-row" id="xrow-7419"><div class="xfer-cell">7419 Main</div><div class="xfer-cell" id="xcurr-7419">—</div><div class="xfer-cell" id="xo-7419">—</div><div class="xfer-cell xfer-route" id="xfrom-7419">—</div><div class="xfer-cell xfer-route" id="xto-7419">—</div><div class="xfer-cell xfer-amt" id="xx-7419">—</div></div>
-    <div class="xfer-row" id="xrow-7397"><div class="xfer-cell">7397 Savings</div><div class="xfer-cell" id="xcurr-7397">—</div><div class="xfer-cell" id="xo-7397">—</div><div class="xfer-cell xfer-route" id="xfrom-7397">—</div><div class="xfer-cell xfer-route" id="xto-7397">—</div><div class="xfer-cell xfer-amt" id="xx-7397">—</div></div>
-    <div class="xfer-row" id="xrow-9176"><div class="xfer-cell">9176 Liz COH</div><div class="xfer-cell" id="xcurr-9176">—</div><div class="xfer-cell" id="xo-9176">—</div><div class="xfer-cell xfer-route" id="xfrom-9176">—</div><div class="xfer-cell xfer-route" id="xto-9176">—</div><div class="xfer-cell xfer-amt" id="xx-9176">—</div></div>
-    <div class="xfer-row" id="xrow-9168"><div class="xfer-cell">9168 Liz COH Svgs</div><div class="xfer-cell" id="xcurr-9168">—</div><div class="xfer-cell" id="xo-9168">—</div><div class="xfer-cell xfer-route" id="xfrom-9168">—</div><div class="xfer-cell xfer-route" id="xto-9168">—</div><div class="xfer-cell xfer-amt" id="xx-9168">—</div></div>
-    <div class="xfer-row" id="xrow-0458"><div class="xfer-cell">0458 Matt COH</div><div class="xfer-cell" id="xcurr-0458">—</div><div class="xfer-cell" id="xo-0458">—</div><div class="xfer-cell xfer-route" id="xfrom-0458">—</div><div class="xfer-cell xfer-route" id="xto-0458">—</div><div class="xfer-cell xfer-amt" id="xx-0458">—</div></div>
-    <div class="xfer-row" id="xrow-0466"><div class="xfer-cell">0466 Matt COH Svgs</div><div class="xfer-cell" id="xcurr-0466">—</div><div class="xfer-cell" id="xo-0466">—</div><div class="xfer-cell xfer-route" id="xfrom-0466">—</div><div class="xfer-cell xfer-route" id="xto-0466">—</div><div class="xfer-cell xfer-amt" id="xx-0466">—</div></div>
-    <div class="xfer-row" id="xrow-0741"><div class="xfer-cell">0741 Special Svgs</div><div class="xfer-cell" id="xcurr-0741">—</div><div class="xfer-cell" id="xo-0741">—</div><div class="xfer-cell xfer-route" id="xfrom-0741">—</div><div class="xfer-cell xfer-route" id="xto-0741">—</div><div class="xfer-cell xfer-amt" id="xx-0741">—</div></div>
-    <div class="xfer-row" id="xrow-7889"><div class="xfer-cell">7889 Logan COH</div><div class="xfer-cell" id="xcurr-7889">—</div><div class="xfer-cell" id="xo-7889">—</div><div class="xfer-cell xfer-route" id="xfrom-7889">—</div><div class="xfer-cell xfer-route" id="xto-7889">—</div><div class="xfer-cell xfer-amt" id="xx-7889">—</div></div>
-    <div class="xfer-row" id="xrow-3195"><div class="xfer-cell">3195 Logan COH Svgs</div><div class="xfer-cell" id="xcurr-3195">—</div><div class="xfer-cell" id="xo-3195">—</div><div class="xfer-cell xfer-route" id="xfrom-3195">—</div><div class="xfer-cell xfer-route" id="xto-3195">—</div><div class="xfer-cell xfer-amt" id="xx-3195">—</div></div>
-  </div>
-</div>
-</div>
 
+    <!-- 9 rows -->
+    <div class="xfer-row" id="xrow-7419">
+      <div class="xfer-cell">7419 Main</div>
+      <div class="xfer-cell" id="xcurr-7419">—</div>
+      <div class="xfer-cell" id="xo-7419">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-7419">—</div>
+      <div class="xfer-cell xfer-route" id="xto-7419">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-7419">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-7397">
+      <div class="xfer-cell">7397 Savings</div>
+      <div class="xfer-cell" id="xcurr-7397">—</div>
+      <div class="xfer-cell" id="xo-7397">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-7397">—</div>
+      <div class="xfer-cell xfer-route" id="xto-7397">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-7397">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-9176">
+      <div class="xfer-cell">9176 Liz COH</div>
+      <div class="xfer-cell" id="xcurr-9176">—</div>
+      <div class="xfer-cell" id="xo-9176">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-9176">—</div>
+      <div class="xfer-cell xfer-route" id="xto-9176">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-9176">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-9168">
+      <div class="xfer-cell">9168 Liz COH Svgs</div>
+      <div class="xfer-cell" id="xcurr-9168">—</div>
+      <div class="xfer-cell" id="xo-9168">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-9168">—</div>
+      <div class="xfer-cell xfer-route" id="xto-9168">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-9168">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-0458">
+      <div class="xfer-cell">0458 Matt COH</div>
+      <div class="xfer-cell" id="xcurr-0458">—</div>
+      <div class="xfer-cell" id="xo-0458">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-0458">—</div>
+      <div class="xfer-cell xfer-route" id="xto-0458">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-0458">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-0466">
+      <div class="xfer-cell">0466 Matt COH Svgs</div>
+      <div class="xfer-cell" id="xcurr-0466">—</div>
+      <div class="xfer-cell" id="xo-0466">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-0466">—</div>
+      <div class="xfer-cell xfer-route" id="xto-0466">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-0466">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-0741">
+      <div class="xfer-cell">0741 Special Svgs</div>
+      <div class="xfer-cell" id="xcurr-0741">—</div>
+      <div class="xfer-cell" id="xo-0741">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-0741">—</div>
+      <div class="xfer-cell xfer-route" id="xto-0741">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-0741">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-7889">
+      <div class="xfer-cell">7889 Logan COH</div>
+      <div class="xfer-cell" id="xcurr-7889">—</div>
+      <div class="xfer-cell" id="xo-7889">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-7889">—</div>
+      <div class="xfer-cell xfer-route" id="xto-7889">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-7889">—</div>
+    </div>
+    <div class="xfer-row" id="xrow-3195">
+      <div class="xfer-cell">3195 Logan COH Svgs</div>
+      <div class="xfer-cell" id="xcurr-3195">—</div>
+      <div class="xfer-cell" id="xo-3195">—</div>
+      <div class="xfer-cell xfer-route" id="xfrom-3195">—</div>
+      <div class="xfer-cell xfer-route" id="xto-3195">—</div>
+      <div class="xfer-cell xfer-amt" id="xx-3195">—</div>
+    </div>
+
+  </div><!-- /xfer-table -->
+
+</div><!-- /card -->
+</div><!-- /transfers grid -->
+
+<!-- ══ SUBMIT BAR ════════════════════════════════════════ -->
 <div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:20px 28px 8px;flex-wrap:wrap">
-  <button id="notion-submit" onclick="saveToNotion()" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;background:#b77b82;color:#fef9f6;border:none;border-radius:999px;padding:12px 32px;cursor:pointer;letter-spacing:.03em;transition:opacity .18s;">Save to Notion</button>
+  <button id="notion-submit" onclick="saveToNotion()" style="
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:14px;font-weight:600;
+    background:#b77b82;color:#fef9f6;
+    border:none;border-radius:999px;
+    padding:12px 32px;cursor:pointer;
+    letter-spacing:.03em;transition:opacity .18s;
+  ">Save to Notion</button>
   <div id="notion-status" style="font-size:12px;color:#8a6a6a;font-style:italic"></div>
 </div>
 
@@ -290,175 +500,478 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 
 <script>
 (function(){
-  var fmt=function(n){return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});};
-  var fmtDate=function(v){if(!v)return'—';var p=v.split('-');return p[1]+'/'+p[2]+'/'+p[0].slice(2);};
-  document.getElementById('today').value=new Date().toISOString().split('T')[0];
-  document.getElementById('paydate').addEventListener('input',function(){document.getElementById('tb-paydate').textContent=fmtDate(this.value);});
-  function sumClass(cls){return Array.prototype.slice.call(document.querySelectorAll('.'+cls)).reduce(function(s,el){return s+(parseFloat(el.value)||0);},0);}
-  function getRemainder(){return sumClass('account-input')-sumClass('fixed-input');}
-  function setPillState(el,v){
-    el.className=el.className.replace(/\bb-(zero|neg|pos)(-pill)?\b/g,'').trim();
-    var state=v===0?'zero':v<0?'neg':'pos';
-    if(el.classList.contains('h1pill')){
-      el.classList.add('b-'+state+'-pill');
-      var lbl=el.querySelector('.h1pill__lbl'),val=el.querySelector('.h1pill__val');
-      if(lbl)lbl.style.color='#3c3232';
-      if(val)val.style.color='#3c3232';
-    }else{el.classList.add('b-'+state);}
-  }
-  var groups=[{s:'bf-s',p:'bf-p',d:'bf-d'},{s:'sv-s',p:'sv-p',d:'sv-d'},{s:'ss-s',p:'ss-p',d:'ss-d'},{s:'iv-s',p:'iv-p',d:'iv-d'}];
-  function recalcTotals(){
-    var acct=sumClass('account-input'),fixed=sumClass('fixed-input');
-    document.getElementById('total-bal').textContent=fmt(acct);
-    document.getElementById('tb-total').textContent=fmt(acct);
-    document.getElementById('fixed-total').textContent=fmt(fixed);
-    document.getElementById('remainder').textContent=fmt(acct-fixed);
-  }
-  function recalcBalance(){
-    var rem=getRemainder();
-    var alloc=groups.reduce(function(s,g){return s+(parseFloat(document.getElementById(g.d).value)||0);},0);
-    var bal=rem-alloc;
-    document.getElementById('bal-val').textContent=fmt(bal);
-    setPillState(document.getElementById('bal-pill'),bal);
-    document.getElementById('tb-bal').textContent=fmt(bal);
-    setPillState(document.getElementById('tb-bal'),bal);
-  }
-  function resyncAllocDollars(){
-    var rem=getRemainder();
-    groups.forEach(function(g){
-      var pct=parseFloat(document.getElementById(g.p).value)||0;
-      var dol=rem>0?(pct/100)*rem:0;
-      document.getElementById(g.d).value=dol>0?dol.toFixed(2):'';
-    });
-  }
-  var xferRows=[
-    {key:'7419',label:'7419 Main',curr:function(){return v('a7419');},target:null},
-    {key:'7397',label:'7397 Savings',curr:function(){return v('a7397');},target:function(){return v('a7397')+v('sv-d');}},
-    {key:'9176',label:'9176 Liz COH',curr:function(){return v('a9176');},target:function(){return v('fx-liz-coh');}},
-    {key:'9168',label:'9168 Liz COH Svgs',curr:function(){return v('a9168');},target:function(){return v('fx-liz-svgs');}},
-    {key:'0458',label:'0458 Matt COH',curr:function(){return v('a0458');},target:function(){return v('fx-matt-coh');}},
-    {key:'0466',label:'0466 Matt COH Svgs',curr:function(){return v('a0466');},target:function(){return v('fx-matt-svgs');}},
-    {key:'0741',label:'0741 Special Svgs',curr:function(){return v('a0741');},target:function(){return v('a0741')+v('ss-d');}},
-    {key:'7889',label:'7889 Logan COH',curr:function(){return v('a7889');},target:function(){return v('fx-logan-coh');}},
-    {key:'3195',label:'3195 Logan COH Svgs',curr:function(){return v('a3195');},target:function(){return v('fx-logan-svgs');}},
-  ];
-  function v(id){var el=document.getElementById(id);return el?(parseFloat(el.value)||0):0;}
-  function recalcTransfers(){
-    var totalAcct=sumClass('account-input');
-    var targets={},sumOther=0;
-    xferRows.forEach(function(r){if(r.key!=='7419'){targets[r.key]=r.target();sumOther+=targets[r.key];}});
-    targets['7419']=totalAcct-sumOther;
-    var xBalance=0;
-    xferRows.forEach(function(r){
-      var curr=r.curr(),target=targets[r.key],delta=target-curr;
-      xBalance+=delta;
-      document.getElementById('xcurr-'+r.key).textContent=fmt(curr);
-      document.getElementById('xo-'+r.key).textContent=fmt(target);
-      var fromEl=document.getElementById('xfrom-'+r.key);
-      var toEl=document.getElementById('xto-'+r.key);
-      var amtEl=document.getElementById('xx-'+r.key);
-      if(Math.abs(delta)<0.005){fromEl.textContent='—';toEl.textContent='—';amtEl.textContent='$0.00';}
-      else if(delta>0){fromEl.textContent=r.key==='7419'?'—':'7419 Main';toEl.textContent=r.label;amtEl.textContent=fmt(delta);}
-      else{fromEl.textContent=r.label;toEl.textContent=r.key==='7419'?'—':'7419 Main';amtEl.textContent=fmt(Math.abs(delta));}
-      var row=document.getElementById('xrow-'+r.key);
-      row.className='xfer-row '+(Math.abs(delta)<0.005?'xr-zero':delta>0?'xr-pos':'xr-neg');
-    });
-    var pill=document.getElementById('xbal-status-pill');
-    var balanced=Math.abs(xBalance)<0.02;
-    document.getElementById('xbal-status').textContent=balanced?'Balanced ✔':fmt(xBalance);
-    setPillState(pill,balanced?0:xBalance);
-  }
-  document.querySelectorAll('.account-input,.fixed-input').forEach(function(el){
-    el.addEventListener('input',function(){recalcTotals();resyncAllocDollars();recalcBalance();recalcTransfers();});
-  });
-  groups.forEach(function(g){
-    var S=document.getElementById(g.s),P=document.getElementById(g.p),D=document.getElementById(g.d);
-    S.addEventListener('input',function(){var pct=Math.round(parseFloat(S.value)||0);P.value=pct;var r=getRemainder();D.value=r>0?((pct/100)*r).toFixed(2):'';recalcBalance();recalcTransfers();});
-    P.addEventListener('input',function(){var pct=Math.round(Math.min(100,Math.max(0,parseFloat(P.value)||0)));S.value=pct;var r=getRemainder();D.value=r>0?((pct/100)*r).toFixed(2):'';recalcBalance();recalcTransfers();});
-    D.addEventListener('input',function(){var dol=parseFloat(D.value)||0,r=getRemainder();var pct=Math.round(r>0?Math.min(100,(dol/r)*100):0);P.value=pct;S.value=pct;recalcBalance();recalcTransfers();});
-  });
 
-  var PROXY_URL='https://notion-budget-manager.eamiller1981.workers.dev';
-  var DATABASE_ID='311627ee81db80b8ae51c5b7c8ed83bb';
-  function notionNum(id){return parseFloat(document.getElementById(id).value)||0;}
-  function notionPct(id){return Math.round(parseFloat(document.getElementById(id).value)||0)/100;}
-  function notionDate(id){var v=document.getElementById(id).value;return v?{start:v}:null;}
-  function setStatus(msg,isError){var el=document.getElementById('notion-status');el.textContent=msg;el.style.color=isError?'#8c3a42':'#4a6e3a';}
-  function notionFetch(path,method,body){return fetch(PROXY_URL+'/notion'+path,{method:method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined}).then(function(r){return r.json();});}
-  function buildPayload(currentRun){
-    function xferNum(id){var el=document.getElementById(id);if(!el)return 0;return parseFloat((el.textContent||'0').replace(/[$,+]/g,''))||0;}
-    return {
-      'Current Run':{checkbox:currentRun},
-      'Paydate':{date:notionDate('paydate')},
-      'Today':{date:notionDate('today')},
-      '7419 Main':{number:notionNum('a7419')},'7397 Savings':{number:notionNum('a7397')},
-      '9176 Liz COH':{number:notionNum('a9176')},'9168 Liz COH Svgs':{number:notionNum('a9168')},
-      '0458 Matt COH':{number:notionNum('a0458')},'0466 Matt COH Svgs':{number:notionNum('a0466')},
-      '0741 Special Svgs':{number:notionNum('a0741')},'7889 Logan COH':{number:notionNum('a7889')},
-      '3195 Logan COH Svgs':{number:notionNum('a3195')},
-      'Liz COH ($)':{number:notionNum('fx-liz-coh')},'Liz COH Svgs ($)':{number:notionNum('fx-liz-svgs')},
-      'Matt COH ($)':{number:notionNum('fx-matt-coh')},'Matt COH Svgs ($)':{number:notionNum('fx-matt-svgs')},
-      'Logan COH ($)':{number:notionNum('fx-logan-coh')},'Logan COH Svgs ($)':{number:notionNum('fx-logan-svgs')},
-      'Logan Allowance ($)':{number:notionNum('fx-allow')},'Housecleaning ($)':{number:notionNum('fx-clean')},
-      '% Add to Bal Fwd':{number:notionPct('bf-p')},'$ Add to Bal Fwd':{number:notionNum('bf-d')},
-      '% Add to Svgs':{number:notionPct('sv-p')},'# Add to Svgs':{number:notionNum('sv-d')},
-      '% Add to Special Svgs':{number:notionPct('ss-p')},'# Add to Special Svgs':{number:notionNum('ss-d')},
-      '% Add to Investments':{number:notionPct('iv-p')},'Investments':{number:notionNum('iv-d')},
-      'O-7419 Main':{number:xferNum('xo-7419')},'O-7397 Savings':{number:xferNum('xo-7397')},
-      'O-9176 Liz COH':{number:xferNum('xo-9176')},'O-9168 Liz COH Svgs':{number:xferNum('xo-9168')},
-      'O-0458 Matt COH':{number:xferNum('xo-0458')},'O-0466 Matt COH Svgs':{number:xferNum('xo-0466')},
-      'O-0741 Special Svgs':{number:xferNum('xo-0741')},'O-7889 Logan COH':{number:xferNum('xo-7889')},
-      'O-3195 Logan COH Svgs':{number:xferNum('xo-3195')},
-      'X-7419 Main':{number:xferNum('xx-7419')},'X-7397 Savings':{number:xferNum('xx-7397')},
-      'X-9176 Liz COH':{number:xferNum('xx-9176')},'X-9168 Liz COH Svgs':{number:xferNum('xx-9168')},
-      'X-0458 Matt COH':{number:xferNum('xx-0458')},'X-0466 Matt COH Svgs':{number:xferNum('xx-0466')},
-      'X-0741 Special Svgs':{number:xferNum('xx-0741')},'X-7889 Logan COH':{number:xferNum('xx-7889')},
-      'X-3195 Logan COH Svgs':{number:xferNum('xx-3195')},
-      'X-Balance':{number:(function(){return['7419','7397','9176','9168','0458','0466','0741','7889','3195'].reduce(function(s,k){return s+xferNum('xx-'+k);},0);})()},
-      'X-Balance Diff':{number:(function(){var tab=sumClass('account-input');var xb=['7419','7397','9176','9168','0458','0466','0741','7889','3195'].reduce(function(s,k){return s+xferNum('xx-'+k);},0);return tab-xb;})()},
-      'X-Balance Status':{rich_text:[{text:{content:document.getElementById('xbal-status').textContent}}]},
-    };
-  }
-
-  window.addEventListener('load',function(){
-    if(PROXY_URL.indexOf('YOUR-WORKER')!==-1)return;
-    setStatus('Loading from Notion…');
-    notionFetch('/databases/'+DATABASE_ID+'/query','POST',{filter:{property:'Current Run',checkbox:{equals:true}},page_size:1})
-    .then(function(data){
-      if(!data.results||!data.results.length){setStatus('No current run found in Notion.',true);return;}
-      var props=data.results[0].properties;
-      var billsProp=props['Less Bills'];
-     var bills=billsProp?(billsProp.rollup?billsProp.rollup.number:billsProp.formula?billsProp.formula.number:billsProp.number):null;
-      if(bills!==null&&bills!==undefined){document.getElementById('fx-bills').value=bills;}
-      var debtProp=props['Less Debt'];
-     var debt=debtProp?(debtProp.rollup?debtProp.rollup.number:debtProp.formula?debtProp.formula.number:debtProp.number):null;
-      if(debt!==null&&debt!==undefined){document.getElementById('fx-debt').value=debt;}
-      recalcTotals();resyncAllocDollars();recalcBalance();recalcTransfers();
-      setStatus('');
-    }).catch(function(err){setStatus('Could not load from Notion: '+err.message,true);});
-  });
-
-  window.saveToNotion=function(){
-    var xBalance=['7419','7397','9176','9168','0458','0466','0741','7889','3195'].reduce(function(s,k){var el=document.getElementById('xx-'+k);return s+(parseFloat((el?el.textContent:'0').replace(/[$,+]/g,''))||0);},0);
-    if(Math.abs(xBalance)>0.02){setStatus('⚠ Transfers not balanced (X-Balance = '+xBalance.toFixed(2)+'). Fix before saving.',true);return;}
-    var btn=document.getElementById('notion-submit');
-    btn.disabled=true;btn.style.opacity='0.6';setStatus('Saving…');
-    notionFetch('/databases/'+DATABASE_ID+'/query','POST',{filter:{property:'Current Run',checkbox:{equals:true}},page_size:1})
-    .then(function(data){
-      var p=Promise.resolve();
-      if(data.results&&data.results.length){var id=data.results[0].id;p=notionFetch('/pages/'+id,'PATCH',{properties:{'Current Run':{checkbox:false}}});}
-      return p;
-    })
-    .then(function(){return notionFetch('/pages','POST',{parent:{database_id:DATABASE_ID},properties:buildPayload(true)});})
-    .then(function(result){
-      if(result.object==='error')throw new Error(result.message);
-      setStatus('✔ Saved to Notion');btn.disabled=false;btn.style.opacity='1';
-    })
-    .catch(function(err){setStatus('Error: '+err.message,true);btn.disabled=false;btn.style.opacity='1';});
+  /* ── formatters ── */
+  var fmt = function(n){
+    return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  };
+  var fmtDate = function(v){
+    if(!v) return '—';
+    var p=v.split('-'); return p[1]+'/'+p[2]+'/'+p[0].slice(2);
   };
 
-  recalcTotals();recalcBalance();recalcTransfers();
+  /* ── defaults ── */
+  document.getElementById('today').value = new Date().toISOString().split('T')[0];
+  document.getElementById('paydate').addEventListener('input',function(){
+    document.getElementById('tb-paydate').textContent = fmtDate(this.value);
+  });
+
+  /* ── sum helpers ── */
+  function sumClass(cls){
+    return Array.prototype.slice.call(document.querySelectorAll('.'+cls))
+      .reduce(function(s,el){ return s+(parseFloat(el.value)||0); },0);
+  }
+  function getRemainder(){ return sumClass('account-input')-sumClass('fixed-input'); }
+
+  /* ── pill state (small b-pill and large h1pill) ── */
+  function setPillState(el,v){
+    el.className = el.className.replace(/\bb-(zero|neg|pos)(-pill)?\b/g,'').trim();
+    var state = v===0?'zero':v<0?'neg':'pos';
+    if(el.classList.contains('h1pill')){
+      el.classList.add('b-'+state+'-pill');
+      var lbl=el.querySelector('.h1pill__lbl'), val=el.querySelector('.h1pill__val');
+      var col = '#3c3232'; /* all three new colors are light enough for dark text */
+      if(lbl) lbl.style.color=col;
+      if(val) val.style.color=col;
+    } else {
+      el.classList.add('b-'+state);
+    }
+  }
+
+  /* ── groups ── */
+  var groups = [
+    {s:'bf-s', p:'bf-p', d:'bf-d'},
+    {s:'sv-s', p:'sv-p', d:'sv-d'},
+    {s:'ss-s', p:'ss-p', d:'ss-d'},
+    {s:'iv-s', p:'iv-p', d:'iv-d'},
+  ];
+
+  /* ── recalcTotals: update account total, fixed total, remainder display only ── */
+  function recalcTotals(){
+    var acct  = sumClass('account-input');
+    var fixed = sumClass('fixed-input');
+    document.getElementById('total-bal').textContent   = fmt(acct);
+    document.getElementById('tb-total').textContent    = fmt(acct);
+    document.getElementById('fixed-total').textContent = fmt(fixed);
+    document.getElementById('remainder').textContent   = fmt(acct-fixed);
+  }
+
+  /* ── recalcBalance: read current alloc $ values, compute and display balance ── */
+  /* Does NOT touch any alloc input fields. */
+  function recalcBalance(){
+    var rem   = getRemainder();
+    var alloc = groups.reduce(function(s,g){
+      return s+(parseFloat(document.getElementById(g.d).value)||0);
+    },0);
+    var bal = rem - alloc;
+    document.getElementById('bal-val').textContent = fmt(bal);
+    setPillState(document.getElementById('bal-pill'), bal);
+    document.getElementById('tb-bal').textContent = fmt(bal);
+    setPillState(document.getElementById('tb-bal'), bal);
+  }
+
+  /* ── resyncAllocDollars: re-derive $ from % for all groups (only on remainder change) ── */
+  function resyncAllocDollars(){
+    var rem = getRemainder();
+    groups.forEach(function(g){
+      var pct = parseFloat(document.getElementById(g.p).value)||0;
+      var dol = rem>0?(pct/100)*rem:0;
+      document.getElementById(g.d).value = dol>0?dol.toFixed(2):'';
+    });
+  }
+
+  /* ── recalcTransfers: compute O-…, From/To/Amount, validation ── */
+  var xferRows = [
+    { key:'7419', label:'7419 Main',          curr:function(){return v('a7419');}, target:null /* residual — computed in recalcTransfers */ },
+    { key:'7397', label:'7397 Savings',       curr:function(){return v('a7397');}, target:function(){return v('a7397')+v('sv-d');} },
+    { key:'9176', label:'9176 Liz COH',       curr:function(){return v('a9176');}, target:function(){return v('fx-liz-coh');} },
+    { key:'9168', label:'9168 Liz COH Svgs',  curr:function(){return v('a9168');}, target:function(){return v('fx-liz-svgs');} },
+    { key:'0458', label:'0458 Matt COH',      curr:function(){return v('a0458');}, target:function(){return v('fx-matt-coh');} },
+    { key:'0466', label:'0466 Matt COH Svgs', curr:function(){return v('a0466');}, target:function(){return v('fx-matt-svgs');} },
+    { key:'0741', label:'0741 Special Svgs',  curr:function(){return v('a0741');}, target:function(){return v('a0741')+v('ss-d');} },
+    { key:'7889', label:'7889 Logan COH',     curr:function(){return v('a7889');}, target:function(){return v('fx-logan-coh');} },
+    { key:'3195', label:'3195 Logan COH Svgs',curr:function(){return v('a3195');}, target:function(){return v('fx-logan-svgs');} },
+  ];
+
+  function v(id){
+    var el=document.getElementById(id);
+    return el?(parseFloat(el.value)||0):0;
+  }
+
+  function recalcTransfers(){
+    /*
+     * CLOSED SYSTEM INVARIANT: ∑(target) = ∑(current) = Total Account Balance
+     * Therefore: ∑(delta) = ∑(target − current) = 0
+     *
+     * Implementation:
+     *   1. Compute targets for accounts 2–9 from form inputs.
+     *   2. O-7419 Main = Total Account Balance − ∑(other targets)
+     *      This is the only correct derivation — it is the residual after all
+     *      other accounts hit their targets. This guarantees ∑(delta) = 0.
+     *   3. Amount ($) = |target − current|, direction shown by From/To columns.
+     *   4. Transfer Balance = ∑(delta) — always 0 in a correct system.
+     */
+    var totalAcct = sumClass('account-input');
+
+    /* Step 1: compute targets for rows 2–9 */
+    var targets = {};
+    var sumOtherTargets = 0;
+    xferRows.forEach(function(r){
+      if(r.key !== '7419'){
+        targets[r.key] = r.target();
+        sumOtherTargets += targets[r.key];
+      }
+    });
+
+    /* Step 2: 7419 Main is the residual — absorbs whatever is left */
+    targets['7419'] = totalAcct - sumOtherTargets;
+
+    /* Step 3 & 4: render rows and accumulate xBalance */
+    var xBalance = 0;
+
+    xferRows.forEach(function(r){
+      var curr   = r.curr();
+      var target = targets[r.key];
+      var delta  = target - curr;   /* signed: + = needs money, − = sends money */
+      xBalance  += delta;           /* must sum to 0 */
+
+      document.getElementById('xcurr-'+r.key).textContent = fmt(curr);
+      document.getElementById('xo-'+r.key).textContent    = fmt(target);
+
+      var fromEl = document.getElementById('xfrom-'+r.key);
+      var toEl   = document.getElementById('xto-'+r.key);
+      var amtEl  = document.getElementById('xx-'+r.key);
+
+      if(Math.abs(delta) < 0.005){
+        fromEl.textContent = '—';
+        toEl.textContent   = '—';
+        amtEl.textContent  = '$0.00';
+      } else if(delta > 0){
+        /* account needs more money — funded from 7419 Main */
+        fromEl.textContent = r.key === '7419' ? '—' : '7419 Main';
+        toEl.textContent   = r.label;
+        amtEl.textContent  = fmt(delta);
+      } else {
+        /* account has excess — returns to 7419 Main */
+        fromEl.textContent = r.label;
+        toEl.textContent   = r.key === '7419' ? '—' : '7419 Main';
+        amtEl.textContent  = fmt(Math.abs(delta));
+      }
+
+      var row = document.getElementById('xrow-'+r.key);
+      row.className = 'xfer-row '+(
+        Math.abs(delta) < 0.005 ? 'xr-zero' : delta > 0 ? 'xr-pos' : 'xr-neg'
+      );
+    });
+
+    /* Transfer Balance pill — should always be ~0 */
+    var pill = document.getElementById('xbal-status-pill');
+    var balanced = Math.abs(xBalance) < 0.02;
+    document.getElementById('xbal-status').textContent =
+      balanced ? 'Balanced ✔' : fmt(xBalance);
+    setPillState(pill, balanced ? 0 : xBalance);
+  }
+
+  /* ── account / fixed inputs: retotal → resync alloc $ → update balance + transfers ── */
+  document.querySelectorAll('.account-input,.fixed-input').forEach(function(el){
+    el.addEventListener('input',function(){
+      recalcTotals();
+      resyncAllocDollars();
+      recalcBalance();
+      recalcTransfers();
+    });
+  });
+
+  /* ── alloc group wiring: each handler updates only its two siblings, then balance ── */
+  groups.forEach(function(g){
+    var S=document.getElementById(g.s);
+    var P=document.getElementById(g.p);
+    var D=document.getElementById(g.d);
+
+    /* SLIDER moved → write % and derive $ */
+    S.addEventListener('input',function(){
+      var pct = Math.round(parseFloat(S.value)||0);
+      P.value = pct;
+      var r = getRemainder();
+      D.value = r>0?((pct/100)*r).toFixed(2):'';
+      recalcBalance();
+      recalcTransfers();
+    });
+
+    /* % typed → move slider and derive $ */
+    P.addEventListener('input',function(){
+      var pct = Math.round(Math.min(100,Math.max(0,parseFloat(P.value)||0)));
+      S.value = pct;
+      var r = getRemainder();
+      D.value = r>0?((pct/100)*r).toFixed(2):'';
+      recalcBalance();
+      recalcTransfers();
+    });
+
+    /* $ typed → back-calc % and move slider. Do NOT re-derive $ (user is editing it). */
+    D.addEventListener('input',function(){
+      var dol = parseFloat(D.value)||0;
+      var r   = getRemainder();
+      var pct = Math.round(r>0?Math.min(100,(dol/r)*100):0);
+      P.value = pct;
+      S.value = pct;
+      recalcBalance();
+      recalcTransfers();
+    });
+  });
+
+  /* ════════════════════════════════════════════════════════
+   * NOTION SYNC
+   * ════════════════════════════════════════════════════════
+   * Architecture: HTML (GitHub Pages) → Cloudflare Worker proxy → Notion API
+   * Token lives only in the Worker environment variable — never here.
+   *
+   * ── CONFIGURE THESE TWO VALUES ──────────────────────── */
+  var PROXY_URL    = 'https://notion-budget-manager.eamiller1981.workers.dev';
+  var DATABASE_ID  = '311627ee81db80b8ae51c5b7c8ed83bb';
+  /* ─────────────────────────────────────────────────────── */
+
+  /* ── helpers ── */
+  function notionNum(id){ return parseFloat(document.getElementById(id).value)||0; }
+  function notionPct(id){ return Math.round(parseFloat(document.getElementById(id).value)||0) / 100; }
+  function notionDate(id){
+    var v = document.getElementById(id).value;
+    return v ? { start: v } : null;
+  }
+
+  /* ── status display ── */
+  function setStatus(msg, isError){
+    var el = document.getElementById('notion-status');
+    el.textContent = msg;
+    el.style.color = isError ? '#8c3a42' : '#4a6e3a';
+  }
+
+  /* ── proxy fetch wrapper ── */
+  function notionFetch(path, method, body){
+    return fetch(PROXY_URL + '/notion' + path, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function(r){ return r.json(); });
+  }
+
+  /* ── build the full Notion properties payload ── */
+  function buildPayload(currentRun){
+
+    /* Collect all X and O values from the transfer table */
+    function xferNum(id){
+      var el = document.getElementById(id);
+      if(!el) return 0;
+      /* Strip $ + commas and parse */
+      return parseFloat((el.textContent||'0').replace(/[$,+]/g,''))||0;
+    }
+
+    var payload = {
+      /* ── Lifecycle ── */
+      'Current Run': { checkbox: currentRun },
+
+      /* ── Dates ── */
+      'Paydate': { date: notionDate('paydate') },
+      'Today':   { date: notionDate('today') },
+
+      /* ── Account balances ── */
+      '7419 Main':          { number: notionNum('a7419') },
+      '7397 Savings':       { number: notionNum('a7397') },
+      '9176 Liz COH':       { number: notionNum('a9176') },
+      '9168 Liz COH Svgs':  { number: notionNum('a9168') },
+      '0458 Matt COH':      { number: notionNum('a0458') },
+      '0466 Matt COH Svgs': { number: notionNum('a0466') },
+      '0741 Special Svgs':  { number: notionNum('a0741') },
+      '7889 Logan COH':     { number: notionNum('a7889') },
+      '3195 Logan COH Svgs':{ number: notionNum('a3195') },
+
+      /* ── Fixed expenses (discretionary COH) ── */
+      'Liz COH ($)':        { number: notionNum('fx-liz-coh') },
+      'Liz COH Svgs ($)':   { number: notionNum('fx-liz-svgs') },
+      'Matt COH ($)':       { number: notionNum('fx-matt-coh') },
+      'Matt COH Svgs ($)':  { number: notionNum('fx-matt-svgs') },
+      'Logan COH ($)':      { number: notionNum('fx-logan-coh') },
+      'Logan COH Svgs ($)': { number: notionNum('fx-logan-svgs') },
+      'Logan Allowance ($)':{ number: notionNum('fx-allow') },
+      'Housecleaning ($)':  { number: notionNum('fx-clean') },
+
+      /* ── Payday allocations ── */
+      '% Add to Bal Fwd':      { number: notionPct('bf-p') },
+      '$ Add to Bal Fwd':      { number: notionNum('bf-d') },
+      '% Add to Svgs':         { number: notionPct('sv-p') },
+      '# Add to Svgs':         { number: notionNum('sv-d') },
+      '% Add to Special Svgs': { number: notionPct('ss-p') },
+      '# Add to Special Svgs': { number: notionNum('ss-d') },
+      '% Add to Investments':  { number: notionPct('iv-p') },
+      'Investments':           { number: notionNum('iv-d') },
+
+      /* ── Transfer targets (O-…) ── */
+      'O-7419 Main':          { number: xferNum('xo-7419') },
+      'O-7397 Savings':       { number: xferNum('xo-7397') },
+      'O-9176 Liz COH':       { number: xferNum('xo-9176') },
+      'O-9168 Liz COH Svgs':  { number: xferNum('xo-9168') },
+      'O-0458 Matt COH':      { number: xferNum('xo-0458') },
+      'O-0466 Matt COH Svgs': { number: xferNum('xo-0466') },
+      'O-0741 Special Svgs':  { number: xferNum('xo-0741') },
+      'O-7889 Logan COH':     { number: xferNum('xo-7889') },
+      'O-3195 Logan COH Svgs':{ number: xferNum('xo-3195') },
+
+      /* ── Transfer deltas (X-…) ── */
+      'X-7419 Main':          { number: xferNum('xx-7419') },
+      'X-7397 Savings':       { number: xferNum('xx-7397') },
+      'X-9176 Liz COH':       { number: xferNum('xx-9176') },
+      'X-9168 Liz COH Svgs':  { number: xferNum('xx-9168') },
+      'X-0458 Matt COH':      { number: xferNum('xx-0458') },
+      'X-0466 Matt COH Svgs': { number: xferNum('xx-0466') },
+      'X-0741 Special Svgs':  { number: xferNum('xx-0741') },
+      'X-7889 Logan COH':     { number: xferNum('xx-7889') },
+      'X-3195 Logan COH Svgs':{ number: xferNum('xx-3195') },
+
+      /* ── Validation fields (written for audit, not shown in UI) ── */
+      'X-Balance':      { number: (function(){
+        var keys=['7419','7397','9176','9168','0458','0466','0741','7889','3195'];
+        return keys.reduce(function(s,k){ return s+xferNum('xx-'+k); },0);
+      })() },
+      'X-Balance Diff': { number: (function(){
+        var tab = sumClass('account-input');
+        var xb  = ['7419','7397','9176','9168','0458','0466','0741','7889','3195']
+          .reduce(function(s,k){ return s+xferNum('xx-'+k); },0);
+        return tab - xb;
+      })() },
+      'X-Balance Status': { rich_text: [{ text: { content:
+        document.getElementById('xbal-status').textContent
+      }}]},
+    };
+
+    return payload;
+  }
+
+  /* ════════════════════════════════════════════════════════
+   * SYNC STATE
+   * currentPageId: the Notion page ID of the active run.
+   *   Set when paydate is entered (new record created).
+   *   Used by Save to PATCH rather than create.
+   * ════════════════════════════════════════════════════════ */
+  var currentPageId = null;
+
+  /* ── helper: read rollup/formula/number from a Notion property ── */
+  function notionPropNum(prop){
+    if(!prop) return null;
+    if(prop.rollup)  return prop.rollup.number;
+    if(prop.formula) return prop.formula.number;
+    return prop.number;
+  }
+
+  /* ── helper: populate bills + debt from a page's properties ── */
+  function populateBillsDebt(props){
+    var bills = notionPropNum(props['Less Bills']);
+    var debt  = notionPropNum(props['Less Debt']);
+    if(bills !== null && bills !== undefined){
+      document.getElementById('fx-bills').value = bills;
+    }
+    if(debt !== null && debt !== undefined){
+      document.getElementById('fx-debt').value = debt;
+    }
+    recalcTotals();
+    resyncAllocDollars();
+    recalcBalance();
+    recalcTransfers();
+  }
+
+  /* ── PAYDATE ENTERED: create new Current Run record, then fetch rollups ── */
+  document.getElementById('paydate').addEventListener('change', function(){
+    var paydateVal = this.value;
+    if(!paydateVal) return;
+
+    setStatus('Creating pay period in Notion…');
+
+    /* Step 1: find and demote any existing Current Run = true */
+    notionFetch('/databases/' + DATABASE_ID + '/query', 'POST', {
+      filter: { property: 'Current Run', checkbox: { equals: true } },
+      page_size: 1
+    })
+    .then(function(data){
+      var patch = Promise.resolve();
+      if(data.results && data.results.length){
+        patch = notionFetch('/pages/' + data.results[0].id, 'PATCH', {
+          properties: { 'Current Run': { checkbox: false } }
+        });
+      }
+      return patch;
+    })
+    .then(function(){
+      /* Step 2: create new record with Current Run = true + Paydate + Today only */
+      return notionFetch('/pages', 'POST', {
+        parent: { database_id: DATABASE_ID },
+        properties: {
+          'Current Run': { checkbox: true },
+          'Paydate':     { date: { start: paydateVal } },
+          'Today':       { date: { start: new Date().toISOString().split('T')[0] } }
+        }
+      });
+    })
+    .then(function(newPage){
+      if(newPage.object === 'error') throw new Error(newPage.message);
+      currentPageId = newPage.id;
+      setStatus('Pay period created. Fetching bill totals…');
+
+      /* Step 3: wait 2s for Notion rollups to compute, then re-fetch */
+      return new Promise(function(resolve){ setTimeout(resolve, 2000); })
+        .then(function(){
+          return notionFetch('/pages/' + currentPageId, 'GET');
+        });
+    })
+    .then(function(page){
+      if(page.object === 'error') throw new Error(page.message);
+      populateBillsDebt(page.properties);
+      setStatus('');
+    })
+    .catch(function(err){
+      setStatus('Error creating pay period: ' + err.message, true);
+    });
+  });
+
+  /* ── SAVE: validate → PATCH existing record (created at paydate entry) ── */
+  window.saveToNotion = function(){
+
+    if(!currentPageId){
+      setStatus('⚠ Enter a Paydate first to initialise the pay period.', true);
+      return;
+    }
+
+    /* Validation gate */
+    var xBalance = ['7419','7397','9176','9168','0458','0466','0741','7889','3195']
+      .reduce(function(s,k){
+        var el = document.getElementById('xx-'+k);
+        return s + (parseFloat((el ? el.textContent : '0').replace(/[$,+]/g,''))||0);
+      }, 0);
+
+    if(Math.abs(xBalance) > 0.02){
+      setStatus('⚠ Transfers not balanced (X-Balance = ' + xBalance.toFixed(2) + '). Fix before saving.', true);
+      return;
+    }
+
+    var btn = document.getElementById('notion-submit');
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    setStatus('Saving…');
+
+    /* PATCH the record that was created when paydate was entered */
+    notionFetch('/pages/' + currentPageId, 'PATCH', {
+      properties: buildPayload(true)
+    })
+    .then(function(result){
+      if(result.object === 'error') throw new Error(result.message);
+      setStatus('✔ Saved to Notion');
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    })
+    .catch(function(err){
+      setStatus('Error: ' + err.message, true);
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    });
+  };
+
 })();
 </script>
-</body>
-</html>
