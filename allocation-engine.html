@@ -289,7 +289,7 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     </div>
   </div>
 
-  <!-- SECTION 2: FIXED EXPENSES — Bills + Debt Paydown added at top ⑧ -->
+  <!-- SECTION 2: FIXED EXPENSES -->
   <div class="card">
     <h2 class="card__heading">Fixed Expenses</h2>
     <div class="field-stack">
@@ -306,12 +306,12 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       <div class="field-row"><label for="fx-clean">Housecleaning</label><div class="fi afx"><span class="sym sym-l">$</span><input type="number" id="fx-clean" class="pl fixed-input" value="250" step="0.01"/></div></div>
     </div>
     <div class="h1pill">
-        <span class="h1pill__lbl">Fixed Expenses</span>
-        <span class="h1pill__val" id="fixed-total">$1,750.00</span>
-      </div>
+      <span class="h1pill__lbl">Fixed Expenses</span>
+      <span class="h1pill__val" id="fixed-total">$1,750.00</span>
+    </div>
   </div>
 
-  <!-- SECTION 3: PAYDAY ALLOCATIONS — no formula box ⑬, no subheading ⑪ -->
+  <!-- SECTION 3: PAYDAY ALLOCATIONS -->
   <div class="card span-full">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:0">
       <h2 class="card__heading" style="margin-bottom:0">Payday Allocations</h2>
@@ -321,7 +321,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       </div>
     </div>
 
-    <!-- Balance Forward -->
     <div class="ablock">
       <div class="ablock__title">Balance Forward</div>
       <div class="row-label">% Add to Bal Fwd</div>
@@ -332,7 +331,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       </div>
     </div>
 
-    <!-- Savings -->
     <div class="ablock">
       <div class="ablock__title">Savings</div>
       <div class="row-label">% Add to Svgs</div>
@@ -343,7 +341,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       </div>
     </div>
 
-    <!-- Special Savings -->
     <div class="ablock">
       <div class="ablock__title">Special Savings</div>
       <div class="row-label">% Add to Special Svgs</div>
@@ -354,7 +351,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       </div>
     </div>
 
-    <!-- Investments -->
     <div class="ablock">
       <div class="ablock__title">Investments</div>
       <div class="row-label">% Add to Investments</div>
@@ -365,7 +361,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       </div>
     </div>
 
-    <!-- ⑫ Balance as h1pill (no separate card), with color logic -->
     <div class="h1pill b-zero-pill" id="bal-pill" style="margin-top:22px">
       <span class="h1pill__lbl">Balance</span>
       <span class="h1pill__val" id="bal-val">$0.00</span>
@@ -373,16 +368,11 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 
   </div>
 
-</div><!-- /grid -->
+</div>
 
-<!-- ══════════════════════════════════════════════════════
-     SECTION 4: TRANSFERS  —  display-only, computed from Sections 1–3
-     Field names match Notion "Budget Run" → "Transfers" view exactly.
-═══════════════════════════════════════════════════════════ -->
 <div class="main-grid" style="padding-top:0">
 <div class="card span-full" style="background:#f0ddd4;border-color:#ddc4bc">
 
-  <!-- Heading row + Transfer Balance pill -->
   <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:0">
     <h2 class="card__heading" style="margin-bottom:0">Transfers</h2>
     <div class="h1pill b-zero-pill" id="xbal-status-pill" style="margin-top:0;width:calc(50% - 9px - 22px)">
@@ -391,10 +381,8 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     </div>
   </div>
 
-  <!-- Transfer table -->
   <div class="xfer-table">
 
-    <!-- Header -->
     <div class="xfer-hrow">
       <div class="xfer-hcell">Account</div>
       <div class="xfer-hcell">Current Balance</div>
@@ -404,7 +392,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       <div class="xfer-hcell">Amount ($)</div>
     </div>
 
-    <!-- 9 rows -->
     <div class="xfer-row" id="xrow-7419">
       <div class="xfer-cell">7419 Main</div>
       <div class="xfer-cell" id="xcurr-7419">—</div>
@@ -478,12 +465,11 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       <div class="xfer-cell xfer-amt" id="xx-3195">—</div>
     </div>
 
-  </div><!-- /xfer-table -->
+  </div>
 
-</div><!-- /card -->
-</div><!-- /transfers grid -->
+</div>
+</div>
 
-<!-- ══ SUBMIT BAR ════════════════════════════════════════ -->
 <div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:20px 28px 8px;flex-wrap:wrap">
   <button id="notion-submit" onclick="saveToNotion()" style="
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
@@ -501,7 +487,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 <script>
 (function(){
 
-  /* ── formatters ── */
   var fmt = function(n){
     return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   };
@@ -510,27 +495,24 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     var p=v.split('-'); return p[1]+'/'+p[2]+'/'+p[0].slice(2);
   };
 
-  /* ── defaults ── */
   document.getElementById('today').value = new Date().toISOString().split('T')[0];
   document.getElementById('paydate').addEventListener('input',function(){
     document.getElementById('tb-paydate').textContent = fmtDate(this.value);
   });
 
-  /* ── sum helpers ── */
   function sumClass(cls){
     return Array.prototype.slice.call(document.querySelectorAll('.'+cls))
       .reduce(function(s,el){ return s+(parseFloat(el.value)||0); },0);
   }
   function getRemainder(){ return sumClass('account-input')-sumClass('fixed-input'); }
 
-  /* ── pill state (small b-pill and large h1pill) ── */
   function setPillState(el,v){
     el.className = el.className.replace(/\bb-(zero|neg|pos)(-pill)?\b/g,'').trim();
     var state = v===0?'zero':v<0?'neg':'pos';
     if(el.classList.contains('h1pill')){
       el.classList.add('b-'+state+'-pill');
       var lbl=el.querySelector('.h1pill__lbl'), val=el.querySelector('.h1pill__val');
-      var col = '#3c3232'; /* all three new colors are light enough for dark text */
+      var col = '#3c3232';
       if(lbl) lbl.style.color=col;
       if(val) val.style.color=col;
     } else {
@@ -538,7 +520,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     }
   }
 
-  /* ── groups ── */
   var groups = [
     {s:'bf-s', p:'bf-p', d:'bf-d'},
     {s:'sv-s', p:'sv-p', d:'sv-d'},
@@ -546,7 +527,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     {s:'iv-s', p:'iv-p', d:'iv-d'},
   ];
 
-  /* ── recalcTotals: update account total, fixed total, remainder display only ── */
   function recalcTotals(){
     var acct  = sumClass('account-input');
     var fixed = sumClass('fixed-input');
@@ -556,8 +536,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     document.getElementById('remainder').textContent   = fmt(acct-fixed);
   }
 
-  /* ── recalcBalance: read current alloc $ values, compute and display balance ── */
-  /* Does NOT touch any alloc input fields. */
   function recalcBalance(){
     var rem   = getRemainder();
     var alloc = groups.reduce(function(s,g){
@@ -570,21 +548,17 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     setPillState(document.getElementById('tb-bal'), bal);
   }
 
-  /* ── resyncAllocDollars: re-derive $ from % when remainder changes.
-        Only syncs groups where % is the authoritative source (not dollar-first edits). ── */
   function resyncAllocDollars(){
     var rem = getRemainder();
     groups.forEach(function(g){
       var pct = parseFloat(document.getElementById(g.p).value)||0;
-      /* Only re-derive if a % is set; preserves direct $ entries that back-calculated % */
       var dol = rem>0?(pct/100)*rem:0;
       document.getElementById(g.d).value = dol>0?dol.toFixed(2):'';
     });
   }
 
-  /* ── recalcTransfers: compute O-…, From/To/Amount, validation ── */
   var xferRows = [
-    { key:'7419', label:'7419 Main',          curr:function(){return v('a7419');}, target:null /* residual — computed in recalcTransfers */ },
+    { key:'7419', label:'7419 Main',          curr:function(){return v('a7419');}, target:null },
     { key:'7397', label:'7397 Savings',       curr:function(){return v('a7397');}, target:function(){return v('a7397')+v('sv-d');} },
     { key:'9176', label:'9176 Liz COH',       curr:function(){return v('a9176');}, target:function(){return v('fx-liz-coh');} },
     { key:'9168', label:'9168 Liz COH Svgs',  curr:function(){return v('a9168');}, target:function(){return v('fx-liz-svgs');} },
@@ -601,23 +575,10 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
   }
 
   function recalcTransfers(){
-    /*
-     * CLOSED SYSTEM INVARIANT: ∑(target) = ∑(current) = Total Account Balance
-     * Therefore: ∑(delta) = ∑(target − current) = 0
-     *
-     * Implementation:
-     *   1. Compute targets for accounts 2–9 from form inputs.
-     *   2. O-7419 Main = Total Account Balance − ∑(other targets)
-     *      This is the only correct derivation — it is the residual after all
-     *      other accounts hit their targets. This guarantees ∑(delta) = 0.
-     *   3. Amount ($) = |target − current|, direction shown by From/To columns.
-     *   4. Transfer Balance = ∑(delta) — always 0 in a correct system.
-     */
     var totalAcct = sumClass('account-input');
-
-    /* Step 1: compute targets for rows 2–9 */
     var targets = {};
     var sumOtherTargets = 0;
+
     xferRows.forEach(function(r){
       if(r.key !== '7419'){
         targets[r.key] = r.target();
@@ -625,17 +586,15 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       }
     });
 
-    /* Step 2: 7419 Main is the residual — absorbs whatever is left */
     targets['7419'] = totalAcct - sumOtherTargets;
 
-    /* Step 3 & 4: render rows and accumulate xBalance */
     var xBalance = 0;
 
     xferRows.forEach(function(r){
       var curr   = r.curr();
       var target = targets[r.key];
-      var delta  = target - curr;   /* signed: + = needs money, − = sends money */
-      xBalance  += delta;           /* must sum to 0 */
+      var delta  = target - curr;
+      xBalance  += delta;
 
       document.getElementById('xcurr-'+r.key).textContent = fmt(curr);
       document.getElementById('xo-'+r.key).textContent    = fmt(target);
@@ -649,12 +608,10 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
         toEl.textContent   = '—';
         amtEl.textContent  = '$0.00';
       } else if(delta > 0){
-        /* account needs more money — funded from 7419 Main */
         fromEl.textContent = r.key === '7419' ? '—' : '7419 Main';
         toEl.textContent   = r.label;
         amtEl.textContent  = fmt(delta);
       } else {
-        /* account has excess — returns to 7419 Main */
         fromEl.textContent = r.label;
         toEl.textContent   = r.key === '7419' ? '—' : '7419 Main';
         amtEl.textContent  = fmt(Math.abs(delta));
@@ -666,7 +623,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       );
     });
 
-    /* Transfer Balance pill — should always be ~0 */
     var pill = document.getElementById('xbal-status-pill');
     var balanced = Math.abs(xBalance) < 0.02;
     document.getElementById('xbal-status').textContent =
@@ -674,7 +630,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     setPillState(pill, balanced ? 0 : xBalance);
   }
 
-  /* ── account / fixed inputs: retotal → resync alloc $ → update balance + transfers ── */
   document.querySelectorAll('.account-input,.fixed-input').forEach(function(el){
     el.addEventListener('input',function(){
       recalcTotals();
@@ -684,13 +639,11 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     });
   });
 
-  /* ── alloc group wiring: fully bidirectional, no overwrite ── */
   groups.forEach(function(g){
     var S=document.getElementById(g.s);
     var P=document.getElementById(g.p);
     var D=document.getElementById(g.d);
 
-    /* SLIDER moved → write % and derive $ */
     S.addEventListener('input',function(){
       var pct = Math.round(parseFloat(S.value)||0);
       P.value = pct;
@@ -700,7 +653,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       recalcTransfers();
     });
 
-    /* % typed → move slider and derive $ */
     P.addEventListener('input',function(){
       var pct = Math.round(Math.min(100,Math.max(0,parseFloat(P.value)||0)));
       S.value = pct;
@@ -710,7 +662,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       recalcTransfers();
     });
 
-    /* $ typed → back-calc % and move slider */
     D.addEventListener('input',function(){
       var dol = parseFloat(D.value)||0;
       var r   = getRemainder();
@@ -721,14 +672,12 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       recalcTransfers();
     });
 
-    /* $ blur → round to 2 decimal places */
     D.addEventListener('blur',function(){
       var dol = parseFloat(D.value);
       if(!isNaN(dol)) D.value = dol.toFixed(2);
     });
   });
 
-  /* ── bills/debt blur → round to 2 decimal places ── */
   ['fx-bills','fx-debt'].forEach(function(id){
     var el = document.getElementById(id);
     el.addEventListener('blur',function(){
@@ -739,16 +688,10 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
 
   /* ════════════════════════════════════════════════════════
    * NOTION SYNC
-   * ════════════════════════════════════════════════════════
-   * Architecture: HTML (GitHub Pages) → Cloudflare Worker proxy → Notion API
-   * Token lives only in the Worker environment variable — never here.
-   *
-   * ── CONFIGURE THESE TWO VALUES ──────────────────────── */
+   * ════════════════════════════════════════════════════════ */
   var PROXY_URL    = 'https://notion-budget-manager.eamiller1981.workers.dev';
   var DATABASE_ID  = '311627ee81db80b8ae51c5b7c8ed83bb';
-  /* ─────────────────────────────────────────────────────── */
 
-  /* ── helpers ── */
   function notionNum(id){ return parseFloat(document.getElementById(id).value)||0; }
   function notionPct(id){ return Math.round(parseFloat(document.getElementById(id).value)||0) / 100; }
   function notionDate(id){
@@ -756,63 +699,114 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     return v ? { start: v } : null;
   }
 
-  /* ── status display ── */
   function setStatus(msg, isError){
     var el = document.getElementById('notion-status');
     el.textContent = msg;
     el.style.color = isError ? '#8c3a42' : '#4a6e3a';
   }
 
-  /* ── proxy fetch wrapper ── */
   function notionFetch(path, method, body){
-    return fetch(PROXY_URL + '/notion' + path, {
+    var options = {
       method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: body ? JSON.stringify(body) : undefined
-    }).then(function(r){ return r.json(); });
+      headers: { 'Content-Type': 'application/json' }
+    };
+    if(body !== undefined && body !== null){
+      options.body = JSON.stringify(body);
+    }
+    return fetch(PROXY_URL + '/notion' + path, options).then(function(r){
+      return r.json();
+    });
   }
 
-  /* ── build the full Notion properties payload ── */
-  function buildPayload(currentRun){
+  function sleep(ms){
+    return new Promise(function(resolve){ setTimeout(resolve, ms); });
+  }
 
-    /* Collect all X and O values from the transfer table */
-    function xferNum(id){
-      var el = document.getElementById(id);
-      if(!el) return 0;
-      /* Strip $ + commas and parse */
-      return parseFloat((el.textContent||'0').replace(/[$,+]/g,''))||0;
+  function notionPropNum(prop){
+    if(!prop) return null;
+
+    if(typeof prop.number === 'number') return prop.number;
+
+    if(prop.formula){
+      if(typeof prop.formula.number === 'number') return prop.formula.number;
+      if(typeof prop.formula.string === 'string'){
+        var formulaParsed = parseFloat(prop.formula.string.replace(/[$,]/g,''));
+        if(!isNaN(formulaParsed)) return formulaParsed;
+      }
     }
 
-    var payload = {
-      /* ── Lifecycle ── */
+    if(prop.rollup){
+      if(typeof prop.rollup.number === 'number') return prop.rollup.number;
+      if(prop.rollup.type === 'number' && typeof prop.rollup.number === 'number') return prop.rollup.number;
+      if(Array.isArray(prop.rollup.array)){
+        var rollupSum = prop.rollup.array.reduce(function(sum, item){
+          if(item.type === 'number' && typeof item.number === 'number') return sum + item.number;
+          if(item.type === 'formula' && item.formula && typeof item.formula.number === 'number') return sum + item.formula.number;
+          return sum;
+        }, 0);
+        return rollupSum;
+      }
+    }
+
+    return null;
+  }
+
+  function readLiveSnapshotsFromProperties(props){
+    var billsLive =
+      notionPropNum(props['Less Bills (Live)']) ??
+      notionPropNum(props['Bills Due Today']) ??
+      notionPropNum(props['Bills Due (Today → Period End)']) ??
+      0;
+
+    var debtLive =
+      notionPropNum(props['Less Debt (Live)']) ??
+      notionPropNum(props['Debt Due Today']) ??
+      0;
+
+    return {
+      bills: Number(billsLive) || 0,
+      debt: Number(debtLive) || 0
+    };
+  }
+
+  function applyBillsDebtToUi(bills, debt){
+    document.getElementById('fx-bills').value = Number(bills || 0).toFixed(2);
+    document.getElementById('fx-debt').value  = Number(debt || 0).toFixed(2);
+    recalcTotals();
+    resyncAllocDollars();
+    recalcBalance();
+    recalcTransfers();
+  }
+
+  function buildPayload(currentRun){
+    return {
       'Current Run': { checkbox: currentRun },
 
-      /* ── Dates ── */
       'Paydate': { date: notionDate('paydate') },
       'Today':   { date: notionDate('today') },
 
-      /* ── Account balances ── */
-      '7419 Main':          { number: notionNum('a7419') },
-      '7397 Savings':       { number: notionNum('a7397') },
-      '9176 Liz COH':       { number: notionNum('a9176') },
-      '9168 Liz COH Svgs':  { number: notionNum('a9168') },
-      '0458 Matt COH':      { number: notionNum('a0458') },
-      '0466 Matt COH Svgs': { number: notionNum('a0466') },
-      '0741 Special Svgs':  { number: notionNum('a0741') },
-      '7889 Logan COH':     { number: notionNum('a7889') },
-      '3195 Logan COH Svgs':{ number: notionNum('a3195') },
+      '7419 Main':           { number: notionNum('a7419') },
+      '7397 Savings':        { number: notionNum('a7397') },
+      '9176 Liz COH':        { number: notionNum('a9176') },
+      '9168 Liz COH Svgs':   { number: notionNum('a9168') },
+      '0458 Matt COH':       { number: notionNum('a0458') },
+      '0466 Matt COH Svgs':  { number: notionNum('a0466') },
+      '0741 Special Svgs':   { number: notionNum('a0741') },
+      '7889 Logan COH':      { number: notionNum('a7889') },
+      '3195 Logan COH Svgs': { number: notionNum('a3195') },
 
-      /* ── Fixed expenses (discretionary COH) ── */
-      'Liz COH ($)':        { number: notionNum('fx-liz-coh') },
-      'Liz COH Svgs ($)':   { number: notionNum('fx-liz-svgs') },
-      'Matt COH ($)':       { number: notionNum('fx-matt-coh') },
-      'Matt COH Svgs ($)':  { number: notionNum('fx-matt-svgs') },
-      'Logan COH ($)':      { number: notionNum('fx-logan-coh') },
-      'Logan COH Svgs ($)': { number: notionNum('fx-logan-svgs') },
-      'Logan Allowance ($)':{ number: notionNum('fx-allow') },
-      'Housecleaning ($)':  { number: notionNum('fx-clean') },
+      'Less Bills': { number: notionNum('fx-bills') },
+      'Less Debt':  { number: notionNum('fx-debt') },
 
-      /* ── Payday allocations ── */
+      'Liz COH ($)':         { number: notionNum('fx-liz-coh') },
+      'Liz COH Svgs ($)':    { number: notionNum('fx-liz-svgs') },
+      'Matt COH ($)':        { number: notionNum('fx-matt-coh') },
+      'Matt COH Svgs ($)':   { number: notionNum('fx-matt-svgs') },
+      'Logan COH ($)':       { number: notionNum('fx-logan-coh') },
+      'Logan COH Svgs ($)':  { number: notionNum('fx-logan-svgs') },
+      'Logan Allowance ($)': { number: notionNum('fx-allow') },
+      'Housecleaning ($)':   { number: notionNum('fx-clean') },
+
       '% Add to Bal Fwd':      { number: notionPct('bf-p') },
       '$ Add to Bal Fwd':      { number: notionNum('bf-d') },
       '% Add to Svgs':         { number: notionPct('sv-p') },
@@ -820,94 +814,123 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       '% Add to Special Svgs': { number: notionPct('ss-p') },
       '# Add to Special Svgs': { number: notionNum('ss-d') },
       '% Add to Investments':  { number: notionPct('iv-p') },
-      'Investments':           { number: notionNum('iv-d') },
-
+      'Investments':           { number: notionNum('iv-d') }
     };
-
-    return payload;
   }
 
-  /* ════════════════════════════════════════════════════════
-   * SYNC STATE
-   * currentPageId: Notion page ID of the active run.
-   *   Set when paydate is entered (new record created).
-   *   Used by Save to PATCH rather than create.
-   * ════════════════════════════════════════════════════════ */
   var currentPageId = null;
+  var paydateRequestSerial = 0;
 
-  /* ── helper: read rollup/formula/number from a Notion property ── */
-  function notionPropNum(prop){
-    if(!prop) return null;
-    if(prop.rollup)  return prop.rollup.number;
-    if(prop.formula) return prop.formula.number;
-    return prop.number;
+  async function demoteExistingCurrentRuns(){
+    var data = await notionFetch('/databases/' + DATABASE_ID + '/query', 'POST', {
+      filter: { property: 'Current Run', checkbox: { equals: true } },
+      page_size: 25
+    });
+
+    if(data.object === 'error') throw new Error(data.message);
+
+    var results = (data.results || []);
+    for(var i = 0; i < results.length; i++){
+      await notionFetch('/pages/' + results[i].id, 'PATCH', {
+        properties: { 'Current Run': { checkbox: false } }
+      });
+    }
   }
 
-  /* ── PAYDATE ENTERED: snapshot bills/debt from old record, create new ── */
-  document.getElementById('paydate').addEventListener('change', function(){
+  async function createCurrentRun(paydateVal, todayVal){
+    var newPage = await notionFetch('/pages', 'POST', {
+      parent: { database_id: DATABASE_ID },
+      properties: {
+        'Current Run': { checkbox: true },
+        'Paydate':     { date: { start: paydateVal } },
+        'Today':       { date: { start: todayVal } }
+      }
+    });
+
+    if(newPage.object === 'error') throw new Error(newPage.message);
+    return newPage;
+  }
+
+  async function resolveAndSnapshotLiveValues(pageId){
+    var attempts = 6;
+    var waitMs = 1200;
+    var snapshots = { bills: 0, debt: 0 };
+    var sawAnyNonNull = false;
+
+    for(var attempt = 0; attempt < attempts; attempt++){
+      if(attempt > 0) await sleep(waitMs);
+
+      var fresh = await notionFetch('/pages/' + pageId, 'GET');
+      if(fresh.object === 'error') throw new Error(fresh.message);
+
+      var props = fresh.properties || {};
+      var billsCandidate =
+        notionPropNum(props['Less Bills (Live)']) ??
+        notionPropNum(props['Bills Due Today']) ??
+        notionPropNum(props['Bills Due (Today → Period End)']);
+
+      var debtCandidate =
+        notionPropNum(props['Less Debt (Live)']) ??
+        notionPropNum(props['Debt Due Today']);
+
+      if(billsCandidate !== null || debtCandidate !== null){
+        sawAnyNonNull = true;
+        snapshots = readLiveSnapshotsFromProperties(props);
+
+        if(attempt > 0 || snapshots.bills !== 0 || snapshots.debt !== 0){
+          break;
+        }
+      }
+    }
+
+    await notionFetch('/pages/' + pageId, 'PATCH', {
+      properties: {
+        'Less Bills': { number: snapshots.bills },
+        'Less Debt':  { number: snapshots.debt }
+      }
+    });
+
+    return {
+      bills: snapshots.bills,
+      debt: snapshots.debt,
+      sawAnyNonNull: sawAnyNonNull
+    };
+  }
+
+  document.getElementById('paydate').addEventListener('change', async function(){
     var paydateVal = this.value;
     if(!paydateVal) return;
 
+    var thisRequest = ++paydateRequestSerial;
+    var todayVal = document.getElementById('today').value || new Date().toISOString().split('T')[0];
+
     setStatus('Creating pay period in Notion…');
 
-    var billsSnapshot = 0;
-    var debtSnapshot  = 0;
+    try {
+      await demoteExistingCurrentRuns();
+      if(thisRequest !== paydateRequestSerial) return;
 
-    /* Step 1: find old Current Run, read live rollups before demoting */
-    notionFetch('/databases/' + DATABASE_ID + '/query', 'POST', {
-      filter: { property: 'Current Run', checkbox: { equals: true } },
-      page_size: 1
-    })
-    .then(function(data){
-      var patch = Promise.resolve();
+      var newPage = await createCurrentRun(paydateVal, todayVal);
+      if(thisRequest !== paydateRequestSerial) return;
 
-      if(data.results && data.results.length){
-        var oldProps = data.results[0].properties;
-
-        /* Snapshot Bills Due Today + Debt Due Today from the live record */
-        billsSnapshot = notionPropNum(oldProps['Bills Due Today']) || 0;
-        debtSnapshot  = notionPropNum(oldProps['Debt Due Today'])  || 0;
-
-        /* Demote old record */
-        patch = notionFetch('/pages/' + data.results[0].id, 'PATCH', {
-          properties: { 'Current Run': { checkbox: false } }
-        });
-      }
-
-      return patch;
-    })
-    .then(function(){
-      /* Step 2: create new record with snapshots written as plain numbers */
-      return notionFetch('/pages', 'POST', {
-        parent: { database_id: DATABASE_ID },
-        properties: {
-          'Current Run': { checkbox: true },
-          'Paydate':     { date: { start: paydateVal } },
-          'Today':       { date: { start: new Date().toISOString().split('T')[0] } },
-          'Less Bills':  { number: billsSnapshot },
-          'Less Debt':   { number: debtSnapshot }
-        }
-      });
-    })
-    .then(function(newPage){
-      if(newPage.object === 'error') throw new Error(newPage.message);
       currentPageId = newPage.id;
+      setStatus('Resolving live bills and debt totals…');
 
-      /* Step 3: populate UI immediately — rounded to 2dp */
-      document.getElementById('fx-bills').value = parseFloat(billsSnapshot.toFixed(2));
-      document.getElementById('fx-debt').value  = parseFloat(debtSnapshot.toFixed(2));
-      recalcTotals();
-      resyncAllocDollars();
-      recalcBalance();
-      recalcTransfers();
-      setStatus('');
-    })
-    .catch(function(err){
+      var resolved = await resolveAndSnapshotLiveValues(currentPageId);
+      if(thisRequest !== paydateRequestSerial) return;
+
+      applyBillsDebtToUi(resolved.bills, resolved.debt);
+
+      if(!resolved.sawAnyNonNull){
+        setStatus('Created new run, but live bill/debt fields did not resolve yet. Snapshot saved as $0.00 / $0.00.', true);
+      } else {
+        setStatus('✔ Pay period created and snapshots saved.');
+      }
+    } catch (err) {
       setStatus('Error creating pay period: ' + err.message, true);
-    });
+    }
   });
 
-  /* ── SAVE: validate → PATCH existing record (created at paydate entry) ── */
   window.saveToNotion = function(){
 
     if(!currentPageId){
@@ -915,7 +938,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
       return;
     }
 
-    /* Validation gate — all funds must be allocated (Balance = $0) */
     var balText = document.getElementById('bal-val').textContent;
     var bal = parseFloat(balText.replace(/[$,]/g,''))||0;
     if(Math.abs(bal) > 0.02){
@@ -928,7 +950,6 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     btn.style.opacity = '0.6';
     setStatus('Saving…');
 
-    /* PATCH the record created at paydate entry */
     notionFetch('/pages/' + currentPageId, 'PATCH', {
       properties: buildPayload(true)
     })
@@ -945,7 +966,12 @@ input[type="range"]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;b
     });
   };
 
+  recalcTotals();
+  recalcBalance();
+  recalcTransfers();
+
 })();
 </script>
+
 </body>
 </html>
